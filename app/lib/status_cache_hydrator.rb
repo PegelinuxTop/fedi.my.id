@@ -61,6 +61,7 @@ class StatusCacheHydrator
       payload[:filtered]   = payload[:reblog][:filtered]
       payload[:favourited] = payload[:reblog][:favourited]
       payload[:reblogged]  = payload[:reblog][:reblogged]
+      payload[:reactions]  = payload[:reblog][:reactions]
     end
   end
 
@@ -71,6 +72,7 @@ class StatusCacheHydrator
     payload[:bookmarked] = Bookmark.exists?(account_id: account_id, status_id: status.id)
     payload[:pinned]     = StatusPin.exists?(account_id: account_id, status_id: status.id) if status.account_id == account_id
     payload[:filtered]   = mapped_applied_custom_filter(account_id, status)
+    payload[:reactions]  = serialized_reactions(account_id)
   end
 
   def mapped_applied_custom_filter(account_id, status)
@@ -83,6 +85,16 @@ class StatusCacheHydrator
     ActiveModelSerializers::SerializableResource.new(
       filter,
       serializer: REST::FilterResultSerializer
+    ).as_json
+  end
+
+  def serialized_reactions(account_id)
+    reactions = @status.reactions(account_id)
+    ActiveModelSerializers::SerializableResource.new(
+      reactions,
+      each_serializer: REST::ReactionSerializer,
+      scope: account_id, # terrible
+      scope_name: :current_user
     ).as_json
   end
 
