@@ -10668,6 +10668,10 @@ noscript {
     color: $gold-star;
   }
 
+  &--reaction &__icon {
+    color: $blurple-300;
+  }
+
   &--reblog &__icon {
     color: $valid-value-color;
   }
