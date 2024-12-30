@@ -314,6 +314,7 @@ RUN \
 # Add qrtools to the final image
 FROM build AS qrtools
 RUN \
+  apt-get update && \
   apt-get install -y zstd wget && \
   wget https://github.com/sorairolake/qrtool/releases/download/v0.11.6/qrtool-v0.11.6-x86_64-unknown-linux-musl.tar.zst && \
   tar --use-compress-program=unzstd -xf qrtool-v0.11.6-x86_64-unknown-linux-musl.tar.zst && \
