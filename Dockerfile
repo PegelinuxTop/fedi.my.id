@@ -269,7 +269,6 @@ COPY Gemfile* /opt/mastodon/
 RUN \
   # Mount Ruby Gem caches
   --mount=type=cache,id=gem-cache-${TARGETPLATFORM},target=/usr/local/bundle/cache/,sharing=locked \
-  bundle lock --normalize-platforms; \
   # Configure bundle to prevent changes to Gemfile and Gemfile.lock
   bundle config set --global frozen "true"; \
   # Configure bundle to not cache downloaded Gems
