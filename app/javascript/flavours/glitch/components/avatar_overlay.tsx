@@ -1,8 +1,7 @@
+import { useHovering } from 'flavours/glitch/hooks/useHovering';
+import { autoPlayGif } from 'flavours/glitch/initial_state';
 import type { Account } from 'flavours/glitch/models/account';
 import type { StatusReaction } from 'flavours/glitch/models/reaction';
-
-import { useHovering } from '../hooks/useHovering';
-import { autoPlayGif } from '../initial_state';
 
 import { Emoji } from './status_reactions';
 
