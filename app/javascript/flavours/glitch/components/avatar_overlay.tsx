@@ -1,9 +1,8 @@
+import { Emoji } from 'flavours/glitch/components/status_reactions';
 import { useHovering } from 'flavours/glitch/hooks/useHovering';
 import { autoPlayGif } from 'flavours/glitch/initial_state';
 import type { Account } from 'flavours/glitch/models/account';
 import type { StatusReaction } from 'flavours/glitch/models/reaction';
-
-import { Emoji } from './status_reactions';
 
 interface Props {
   account: Account | undefined; // FIXME: remove `undefined` once we know for sure its always there
