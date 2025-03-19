@@ -100,6 +100,10 @@ class REST::InstanceSerializer < ActiveModel::Serializer
       translation: {
         enabled: TranslationService.configured?,
       },
+
+      gif_search: {
+        enabled: GifService.configured?,
+      },
     }
   end
 
