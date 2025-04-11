@@ -14,6 +14,7 @@ module Mastodon
   class RateLimitExceededError < Error; end
   class SyntaxError < Error; end
   class InvalidParameterError < Error; end
+  class SignatureVerificationError < Error; end
 
   class UnexpectedResponseError < Error
     attr_reader :response

@@ -49,6 +49,7 @@ class Form::AdminSettings
     authorized_fetch
     app_icon
     favicon
+    min_age
     reject_pattern
     reject_blurhash
   ).freeze
@@ -57,6 +58,7 @@ class Form::AdminSettings
     media_cache_retention_period
     content_cache_retention_period
     backups_retention_period
+    min_age
   ).freeze
 
   BOOLEAN_KEYS = %i(
@@ -111,6 +113,7 @@ class Form::AdminSettings
   validates :show_domain_blocks_rationale, inclusion: { in: %w(disabled users all) }, if: -> { defined?(@show_domain_blocks_rationale) }
   validates :show_bubble_domains, inclusion: { in: %w(disabled users all) }, if: -> { defined?(@show_bubble_domains) }
   validates :media_cache_retention_period, :content_cache_retention_period, :backups_retention_period, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@media_cache_retention_period) || defined?(@content_cache_retention_period) || defined?(@backups_retention_period) }
+  validates :min_age, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@min_age) }
   validates :site_short_description, length: { maximum: DESCRIPTION_LIMIT }, if: -> { defined?(@site_short_description) }
   validates :reject_pattern, regexp_syntax: true, if: -> { defined?(@reject_pattern) }
   validates :status_page_url, url: true, allow_blank: true
