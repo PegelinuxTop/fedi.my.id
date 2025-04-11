@@ -1192,6 +1192,7 @@ body > [data-popper-placement] {
 
 .status__quote {
   margin-bottom: 0.5em;
+
   .quote-display-name {
     .icon {
       margin-left: -3px;
@@ -1420,6 +1421,7 @@ body > [data-popper-placement] {
 
 .status__content.status__content--collapsed {
   max-height: 20px * 15; // 15 lines is roughly above 500 characters
+  overflow: hidden !important;
 }
 
 .status__content__read-more-button,
