@@ -1,3 +1,6 @@
+@use 'sass:color';
+@use '../functions' as *;
+
 // Dependent colors
 $black: #000000;
 
@@ -11,18 +14,13 @@ $ui-primary-color: $classic-primary-color !default;
 $ui-secondary-color: $classic-secondary-color !default;
 $ui-highlight-color: $classic-highlight-color !default;
 
-$darker-text-color: color.adjust($ui-primary-color, $lightness: 20%) !default;
-$dark-text-color: color.adjust($ui-primary-color, $lightness: 12%) !default;
-$secondary-text-color: color.adjust(
-  $ui-secondary-color,
-  $lightness: 6%
-) !default;
-$highlight-text-color: color.adjust(
-  $ui-highlight-color,
-  $lightness: 10%
-) !default;
-$action-button-color: color.adjust($ui-base-color, $lightness: 50%);
-
-$inverted-text-color: $black !default;
-$lighter-text-color: color.adjust($ui-base-color, $lightness: -6%) !default;
-$light-text-color: color.adjust($ui-primary-color, $lightness: -40%) !default;
+@use '../variables' with (
+  $darker-text-color: color.adjust($ui-primary-color, $lightness: 20%),
+    $dark-text-color: color.adjust($ui-primary-color, $lightness: 12%),
+    $secondary-text-color: color.adjust($ui-secondary-color, $lightness: 6%),
+    $highlight-text-color: color.adjust($ui-highlight-color, $lightness: 10%),
+    $action-button-color: color.adjust($ui-base-color, $lightness: 50%),
+    $inverted-text-color: $black,
+    $lighter-text-color: color.adjust($ui-base-color, $lightness: -6%),
+    $light-text-color: color.adjust($ui-primary-color, $lightness: -40%),
+);

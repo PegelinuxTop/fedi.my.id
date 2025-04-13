@@ -37,8 +37,8 @@ require_relative '../lib/paperclip/qr_decoder'
 require_relative '../lib/terrapin/multi_pipe_extensions'
 require_relative '../lib/mastodon/middleware/public_file_server'
 require_relative '../lib/mastodon/middleware/socket_cleanup'
-require_relative '../lib/mastodon/snowflake'
 require_relative '../lib/mastodon/feature'
+require_relative '../lib/mastodon/snowflake'
 require_relative '../lib/mastodon/version'
 require_relative '../lib/devise/strategies/two_factor_ldap_authenticatable'
 require_relative '../lib/devise/strategies/two_factor_pam_authenticatable'
@@ -109,6 +109,7 @@ module Mastodon
     config.x.captcha = config_for(:captcha)
     config.x.mastodon = config_for(:mastodon)
     config.x.translation = config_for(:translation)
+    config.x.gifs = config_for(:gifs)
 
     if ENV.fetch('QUERY_LOG_TAGS_ENABLED', 'false') == 'true'
       config.active_record.query_log_tags_enabled = ENV.fetch('QUERY_LOG_TAGS_ENABLED', 'false') == 'true'

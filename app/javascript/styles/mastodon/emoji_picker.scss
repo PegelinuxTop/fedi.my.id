@@ -1,3 +1,6 @@
+@use 'variables' as *;
+@use 'functions' as *;
+
 .emoji-mart {
   font-size: 13px;
   display: inline-block;
@@ -39,7 +42,7 @@
   color: $darker-text-color;
 
   &:hover {
-    color: color.adjust($darker-text-color, $lightness: 4%);
+    color: lighten($darker-text-color, 4%);
   }
 }
 
@@ -47,7 +50,7 @@
   color: $highlight-text-color;
 
   &:hover {
-    color: color.adjust($highlight-text-color, $lightness: 4%);
+    color: lighten($highlight-text-color, 4%);
   }
 
   .emoji-mart-anchor-bar {
