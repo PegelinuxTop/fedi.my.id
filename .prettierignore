@@ -65,6 +65,10 @@ docker-compose.override.yml
 /app/javascript/mastodon/features/emoji/emoji_map.json
 /app/javascript/mastodon/features/emoji/emoji_data.json
 
+# Ignore emoji map file - Glitch
+/app/javascript/flavours/glitch/features/emoji/emoji_map.json
+/app/javascript/flavours/glitch/features/emoji/emoji_data.json
+
 # Ignore locale files
 /app/javascript/mastodon/locales/*.json
 /config/locales
