@@ -226,7 +226,6 @@ class ActionBar extends PureComponent {
       }
     }
 
-    let quoteIcon = 'quote-right';
     let replyIcon;
     let replyIconComponent;
 
@@ -243,7 +242,6 @@ class ActionBar extends PureComponent {
     const reblogPrivate = status.getIn(['account', 'id']) === me && status.get('visibility') === 'private';
 
     let reblogTitle, reblogIconComponent;
-    let quoteTitle, quoteIconComponent;
 
     const bookmarkTitle = intl.formatMessage(status.get('bookmarked') ? messages.removeBookmark : messages.bookmark);
     const favouriteTitle = intl.formatMessage(status.get('favourited') ? messages.removeFavourite : messages.favourite);
@@ -260,17 +258,6 @@ class ActionBar extends PureComponent {
     } else {
       reblogTitle = intl.formatMessage(messages.cannot_reblog);
       reblogIconComponent = RepeatDisabledIcon;
-    }
-
-    if (publicStatus) {
-      quoteTitle = intl.formatMessage(messages.quote);
-      quoteIconComponent = FormatQuoteIcon;
-    } else if (reblogPrivate) {
-      quoteTitle = intl.formatMessage(messages.reblog_private);
-      quoteIconComponent = FormatQuoteIcon;
-    } else {
-      quoteTitle = intl.formatMessage(messages.cannot_reblog);
-      quoteIconComponent = FormatQuoteIcon;
     }
 
     return (
