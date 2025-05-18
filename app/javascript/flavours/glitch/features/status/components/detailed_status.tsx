@@ -256,7 +256,7 @@ export const DetailedStatus: React.FC<{
       );
       mediaIcons.push('video-camera');
     }
-  } else if (!status.get('quote') && status.get('card')) {
+  } else if (status.get('card')) {
     media = (
       <Card
         sensitive={status.get('sensitive')}
