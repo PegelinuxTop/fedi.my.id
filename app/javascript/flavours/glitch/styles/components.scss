@@ -1201,15 +1201,6 @@ body > [data-popper-placement] {
 
 .status__quote {
   margin-bottom: 0.5em;
-
-  .quote-display-name {
-    .icon {
-      margin-left: -3px;
-      margin-right: 3px;
-      margin-bottom: 2px;
-      vertical-align: middle;
-    }
-  }
 }
 
 .reply-indicator {
@@ -8662,10 +8653,7 @@ noscript {
 
       .trends__item__sparkline {
         path:first-child {
-          fill: rgba(
-            lighten($ui-base-color, 12%),
-            0.25
-          ) !important;
+          fill: rgba(lighten($ui-base-color, 12%), 0.25) !important;
         }
 
         path:last-child {
@@ -10203,8 +10191,7 @@ noscript {
   color: $white;
   background: rgba($black, 0.85);
   backdrop-filter: blur(8px);
-  border: 1px solid
-    rgba(lighten($classic-base-color, 4%), 0.85);
+  border: 1px solid rgba(lighten($classic-base-color, 4%), 0.85);
   border-radius: 8px;
   box-shadow:
     0 10px 15px -3px rgba($base-shadow-color, 0.25),
