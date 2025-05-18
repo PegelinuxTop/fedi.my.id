@@ -178,7 +178,7 @@ export class Emoji extends PureComponent {
 
 }
 
-export class HoverableEmoji extends PureComponent {
+export class HoverableEmoji extends React.PureComponent {
 
   static propTypes = {
     emoji: PropTypes.string.isRequired,

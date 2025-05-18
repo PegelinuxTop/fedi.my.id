@@ -88,6 +88,11 @@ Object.keys(emojiIndex.emojis).forEach(key => {
   if (Object.hasOwn(emoji, '1')) {
     emoji = emoji['1'];
   }
+
+  // Emojis with skin tone modifiers are stored like this
+  if (Object.hasOwn(emoji, '1')) {
+    emoji = emoji['1'];
+  }
   
   const { native } = emoji;
   let { short_names, search, unified } = emojiMartData.emojis[key];
@@ -131,6 +136,5 @@ module.exports = JSON.parse(JSON.stringify([
   emojiMartData.skins,
   emojiMartData.categories,
   emojiMartData.aliases,
-  emojisWithoutShortCodes,
-  emojiMartData
+  emojisWithoutShortCodes
 ]));

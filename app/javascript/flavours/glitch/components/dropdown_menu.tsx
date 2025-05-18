@@ -26,41 +26,18 @@ import {
 import { openModal, closeModal } from 'flavours/glitch/actions/modal';
 import { CircularProgress } from 'flavours/glitch/components/circular_progress';
 import { isUserTouching } from 'flavours/glitch/is_mobile';
-import type {
-  MenuItem,
-  ActionMenuItem,
-  ExternalLinkMenuItem,
+import {
+  isMenuItem,
+  isActionItem,
+  isExternalLinkItem,
 } from 'flavours/glitch/models/dropdown_menu';
+import type { MenuItem } from 'flavours/glitch/models/dropdown_menu';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
 import type { IconProp } from './icon';
 import { IconButton } from './icon_button';
 
 let id = 0;
-
-const isMenuItem = (item: unknown): item is MenuItem => {
-  if (item === null) {
-    return true;
-  }
-
-  return typeof item === 'object' && 'text' in item;
-};
-
-const isActionItem = (item: unknown): item is ActionMenuItem => {
-  if (!item || !isMenuItem(item)) {
-    return false;
-  }
-
-  return 'action' in item;
-};
-
-const isExternalLinkItem = (item: unknown): item is ExternalLinkMenuItem => {
-  if (!item || !isMenuItem(item)) {
-    return false;
-  }
-
-  return 'href' in item;
-};
 
 type RenderItemFn<Item = MenuItem> = (
   item: Item,
@@ -70,6 +47,8 @@ type RenderItemFn<Item = MenuItem> = (
     onKeyUp: (e: React.KeyboardEvent) => void;
   },
 ) => React.ReactNode;
+
+type ItemClickFn<Item = MenuItem> = (item: Item, index: number) => void;
 
 type RenderHeaderFn<Item = MenuItem> = (items: Item[]) => React.ReactNode;
 
@@ -81,10 +60,10 @@ interface DropdownMenuProps<Item = MenuItem> {
   openedViaKeyboard: boolean;
   renderItem?: RenderItemFn<Item>;
   renderHeader?: RenderHeaderFn<Item>;
-  onItemClick: (e: React.MouseEvent | React.KeyboardEvent) => void;
+  onItemClick?: ItemClickFn<Item>;
 }
 
-const DropdownMenu = <Item = MenuItem,>({
+export const DropdownMenu = <Item = MenuItem,>({
   items,
   loading,
   scrollable,
@@ -176,20 +155,35 @@ const DropdownMenu = <Item = MenuItem,>({
     [],
   );
 
+  const handleItemClick = useCallback(
+    (e: React.MouseEvent | React.KeyboardEvent) => {
+      const i = Number(e.currentTarget.getAttribute('data-index'));
+      const item = items?.[i];
+
+      onClose();
+
+      if (!item) {
+        return;
+      }
+
+      if (typeof onItemClick === 'function') {
+        e.preventDefault();
+        onItemClick(item, i);
+      } else if (isActionItem(item)) {
+        e.preventDefault();
+        item.action();
+      }
+    },
+    [onClose, onItemClick, items],
+  );
+
   const handleItemKeyUp = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter' || e.key === ' ') {
-        onItemClick(e);
+        handleItemClick(e);
       }
     },
-    [onItemClick],
-  );
-
-  const handleClick = useCallback(
-    (e: React.MouseEvent | React.KeyboardEvent) => {
-      onItemClick(e);
-    },
-    [onItemClick],
+    [handleItemClick],
   );
 
   const nativeRenderItem = (option: Item, i: number) => {
@@ -209,7 +203,7 @@ const DropdownMenu = <Item = MenuItem,>({
       element = (
         <button
           ref={i === 0 ? handleFocusedItemRef : undefined}
-          onClick={handleClick}
+          onClick={handleItemClick}
           onKeyUp={handleItemKeyUp}
           data-index={i}
         >
@@ -224,7 +218,7 @@ const DropdownMenu = <Item = MenuItem,>({
           data-method={option.method}
           rel='noopener'
           ref={i === 0 ? handleFocusedItemRef : undefined}
-          onClick={handleClick}
+          onClick={handleItemClick}
           onKeyUp={handleItemKeyUp}
           data-index={i}
         >
@@ -236,7 +230,7 @@ const DropdownMenu = <Item = MenuItem,>({
         <Link
           to={option.to}
           ref={i === 0 ? handleFocusedItemRef : undefined}
-          onClick={handleClick}
+          onClick={handleItemClick}
           onKeyUp={handleItemKeyUp}
           data-index={i}
         >
@@ -282,7 +276,7 @@ const DropdownMenu = <Item = MenuItem,>({
         >
           {items.map((option, i) =>
             renderItemMethod(option, i, {
-              onClick: handleClick,
+              onClick: handleItemClick,
               onKeyUp: handleItemKeyUp,
             }),
           )}
@@ -303,10 +297,11 @@ interface DropdownProps<Item = MenuItem> {
   scrollable?: boolean;
   scrollKey?: string;
   status?: ImmutableMap<string, unknown>;
+  forceDropdown?: boolean;
   renderItem?: RenderItemFn<Item>;
   renderHeader?: RenderHeaderFn<Item>;
   onOpen?: () => void;
-  onItemClick?: (arg0: Item, arg1: number) => void;
+  onItemClick?: ItemClickFn<Item>;
 }
 
 const offset = [5, 5] as OffsetValue;
@@ -322,6 +317,7 @@ export const Dropdown = <Item = MenuItem,>({
   disabled,
   scrollable,
   status,
+  forceDropdown = false,
   renderItem,
   renderHeader,
   onOpen,
@@ -337,6 +333,9 @@ export const Dropdown = <Item = MenuItem,>({
   const open = currentId === openDropdownId;
   const activeElement = useRef<HTMLElement | null>(null);
   const targetRef = useRef<HTMLButtonElement | null>(null);
+  const prefetchAccountId = status
+    ? status.getIn(['account', 'id'])
+    : undefined;
 
   const handleClose = useCallback(() => {
     if (activeElement.current) {
@@ -385,16 +384,15 @@ export const Dropdown = <Item = MenuItem,>({
       } else {
         onOpen?.();
 
-        if (status) {
-          dispatch(fetchRelationships([status.getIn(['account', 'id'])]));
+        if (prefetchAccountId) {
+          dispatch(fetchRelationships([prefetchAccountId]));
         }
 
-        if (isUserTouching()) {
+        if (isUserTouching() && !forceDropdown) {
           dispatch(
             openModal({
               modalType: 'ACTIONS',
               modalProps: {
-                status,
                 actions: items,
                 onClick: handleItemClick,
               },
@@ -414,12 +412,13 @@ export const Dropdown = <Item = MenuItem,>({
     [
       dispatch,
       currentId,
+      prefetchAccountId,
       scrollKey,
       onOpen,
       handleItemClick,
       open,
-      status,
       items,
+      forceDropdown,
       handleClose,
     ],
   );
@@ -521,7 +520,7 @@ export const Dropdown = <Item = MenuItem,>({
                 openedViaKeyboard={openedViaKeyboard}
                 renderItem={renderItem}
                 renderHeader={renderHeader}
-                onItemClick={handleItemClick}
+                onItemClick={onItemClick}
               />
             </div>
           </div>

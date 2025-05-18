@@ -325,6 +325,7 @@ he:
         create: יצירת הכרזה
         title: הכרזה חדשה
       preview:
+        disclaimer: כיוון שהמשתמשים לא יכולים לבטל אותם, הודעות דוא"ל צריכות להיות מוגבלות בשימוש להודעות חשובות כגון הודעות על גניבת מידע אישי או הודעות על סגירת השרת.
         explanation_html: 'הדואל ישלח אל <strong>%{display_count} משתמשיםות</strong>. להלן המלל שישלח בדואל:'
         title: צפיה מקדימה בהודעה
       publish: פרסום
@@ -930,6 +931,8 @@ he:
     system_checks:
       database_schema_check:
         message_html: נדרשות הגירות מבני נתונים. אנא הריצו אותן כדי להבטיח שהיישום מתנהג כצפוי
+      elasticsearch_analysis_index_mismatch:
+        message_html: מאפייני בוחן האינדקס של Elasticsearch אינם עדכניים. יש להריץ <code>tootctl search deploy --only-mapping --only=%{value}</code>
       elasticsearch_health_red:
         message_html: אשכול שירותי חיפוש Elasticsearch אינו זמין כעת (מצב אדום), אפשרויות חיפוש אינן זמינות כרגע
       elasticsearch_health_yellow:
@@ -1941,6 +1944,10 @@ he:
       limit: הגעת למספר המירבי של ההודעות המוצמדות
       ownership: הודעות של אחרים לא יכולות להיות מוצמדות
       reblog: אין אפשרות להצמיד הדהודים
+    quote_policies:
+      followers: עוקבים ומאוזכרים
+      nobody: רק מאוזכרים ומאוזכרות
+      public: כולם
     title: '%{name}: "%{quote}"'
     visibilities:
       direct: ישיר
