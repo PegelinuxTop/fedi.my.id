@@ -8,6 +8,8 @@ import { Helmet } from 'react-helmet';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
+import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
+import ExpandMoreIcon from '@/material-icons/400-24px/expand_more.svg?react';
 import { fetchServer, fetchExtendedDescription, fetchDomainBlocks, fetchBubbleDomains  } from 'flavours/glitch/actions/server';
 import { Account } from 'flavours/glitch/components/account';
 import Column from 'flavours/glitch/components/column';
@@ -86,7 +88,7 @@ class About extends PureComponent {
   };
 
   render () {
-    const { multiColumn, intl, server, extendedDescription, domainBlocks, locale, bubbleDomains } = this.props;
+    const { multiColumn, intl, server, extendedDescription, domainBlocks, bubbleDomains, locale } = this.props;
     const isLoading = server.get('isLoading');
 
     return (
@@ -136,6 +138,28 @@ class About extends PureComponent {
           </Section>
 
           <RulesSection />
+
+          <Section title={intl.formatMessage(messages.bubble)} onOpen={this.handleBubbleDomainsOpen}>
+            {bubbleDomains.get('isLoading') ? (
+              <Skeleton width='100%' />
+            ) : (bubbleDomains.get('isAvailable') ? (
+              <>
+                <p><FormattedMessage id='about.bubble.preamble' defaultMessage='This server provides a "bubble timeline", which displays content from these other servers in the fediverse that have been chosen by the admins of this server.' /></p>
+
+                {bubbleDomains.get('items').size > 0 && (
+                  <div className='about__bubble-domains'>
+                    {bubbleDomains.get('items').map(domain => (
+                      <div className='about__bubble-domains__domain' key={domain}>
+                        <h6 className='about__bubble-domains__domain__header'>{domain}</h6>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <p><FormattedMessage id='about.not_available' defaultMessage='This information has not been made available on this server.' /></p>
+            ))}
+          </Section>
 
           <Section title={intl.formatMessage(messages.bubble)} onOpen={this.handleBubbleDomainsOpen}>
             {bubbleDomains.get('isLoading') ? (
