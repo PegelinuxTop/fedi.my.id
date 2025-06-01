@@ -877,7 +877,7 @@ export const AccountHeader: React.FC<{
             >
               <Avatar
                 account={suspended || hidden ? undefined : account}
-                size={90}
+                size={92}
               />
             </a>
 
@@ -914,6 +914,10 @@ export const AccountHeader: React.FC<{
 
           {badges.length > 0 && (
             <div className='account__header__badges'>{badges}</div>
+          )}
+
+          {account.id !== me && signedIn && !(suspended || hidden) && (
+            <FamiliarFollowers accountId={accountId} />
           )}
 
           {!(suspended || hidden) && (
@@ -993,7 +997,6 @@ export const AccountHeader: React.FC<{
                   ))}
                 </div>
               </div>
-              {signedIn && <FamiliarFollowers accountId={accountId} />}
             </div>
           )}
         </div>

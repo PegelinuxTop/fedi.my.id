@@ -2,7 +2,7 @@
 @use '../mastodon/functions' as *;
 
 // Dependent colors
-$black: #000000;
+$black: #000;
 
 $classic-base-color: hsl(240deg, 16%, 19%);
 $classic-primary-color: hsl(240deg, 29%, 70%);
@@ -16,11 +16,11 @@ $ui-highlight-color: $classic-highlight-color !default;
 
 @use '../mastodon/variables' with (
   $darker-text-color: color.adjust($ui-primary-color, $lightness: 20%),
-    $dark-text-color: color.adjust($ui-primary-color, $lightness: 12%),
-    $secondary-text-color: color.adjust($ui-secondary-color, $lightness: 6%),
-    $highlight-text-color: color.adjust($ui-highlight-color, $lightness: 10%),
-    $action-button-color: color.adjust($ui-base-color, $lightness: 50%),
-    $inverted-text-color: $black,
-    $lighter-text-color: color.adjust($ui-base-color, $lightness: -6%),
-    $light-text-color: color.adjust($ui-primary-color, $lightness: -40%),
+  $dark-text-color: color.adjust($ui-primary-color, $lightness: 12%),
+  $secondary-text-color: color.adjust($ui-secondary-color, $lightness: 6%),
+  $highlight-text-color: color.adjust($ui-highlight-color, $lightness: 10%),
+  $action-button-color: color.adjust($ui-base-color, $lightness: 50%),
+  $inverted-text-color: $black,
+  $lighter-text-color: color.adjust($ui-base-color, $lightness: -6%),
+  $light-text-color: color.adjust($ui-primary-color, $lightness: -40%)
 );
