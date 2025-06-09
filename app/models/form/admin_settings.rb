@@ -38,6 +38,7 @@ class Form::AdminSettings
     show_domain_blocks
     show_domain_blocks_rationale
     show_bubble_domains
+    allow_referrer_origin
     noindex
     outgoing_spoilers
     require_invite_text
@@ -62,6 +63,7 @@ class Form::AdminSettings
   ).freeze
 
   BOOLEAN_KEYS = %i(
+    allow_referrer_origin
     timeline_preview
     activity_api_enabled
     peers_api_enabled

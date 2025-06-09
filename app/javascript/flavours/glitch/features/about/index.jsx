@@ -3,10 +3,8 @@ import { PureComponent } from 'react';
 
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
-import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 
-import { List as ImmutableList } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
@@ -15,14 +13,15 @@ import ExpandMoreIcon from '@/material-icons/400-24px/expand_more.svg?react';
 import { fetchServer, fetchExtendedDescription, fetchDomainBlocks, fetchBubbleDomains  } from 'flavours/glitch/actions/server';
 import { Account } from 'flavours/glitch/components/account';
 import Column from 'flavours/glitch/components/column';
-import { Icon  }  from 'flavours/glitch/components/icon';
 import { ServerHeroImage } from 'flavours/glitch/components/server_hero_image';
 import { Skeleton } from 'flavours/glitch/components/skeleton';
 import { LinkFooter} from 'flavours/glitch/features/ui/components/link_footer';
 
+import { Section } from './components/section';
+import { RulesSection } from './components/rules';
+
 const messages = defineMessages({
   title: { id: 'column.about', defaultMessage: 'About' },
-  rules: { id: 'about.rules', defaultMessage: 'Server rules' },
   blocks: { id: 'about.blocks', defaultMessage: 'Moderated servers' },
   bubble: { id: 'about.bubble.title', defaultMessage: 'Bubble servers' },
   silenced: { id: 'about.domain_blocks.silenced.title', defaultMessage: 'Limited' },
@@ -45,54 +44,17 @@ const severityMessages = {
 
 const mapStateToProps = state => ({
   server: state.getIn(['server', 'server']),
+  locale: state.getIn(['meta', 'locale']),
   extendedDescription: state.getIn(['server', 'extendedDescription']),
   domainBlocks: state.getIn(['server', 'domainBlocks']),
   bubbleDomains: state.getIn(['server', 'bubbleDomains']),
 });
 
-class Section extends PureComponent {
-
-  static propTypes = {
-    title: PropTypes.string,
-    children: PropTypes.node,
-    open: PropTypes.bool,
-    onOpen: PropTypes.func,
-  };
-
-  state = {
-    collapsed: !this.props.open,
-  };
-
-  handleClick = () => {
-    const { onOpen } = this.props;
-    const { collapsed } = this.state;
-
-    this.setState({ collapsed: !collapsed }, () => onOpen && onOpen());
-  };
-
-  render () {
-    const { title, children } = this.props;
-    const { collapsed } = this.state;
-
-    return (
-      <div className={classNames('about__section', { active: !collapsed })}>
-        <div className='about__section__title' role='button' tabIndex={0} onClick={this.handleClick}>
-          <Icon id={collapsed ? 'chevron-right' : 'chevron-down'} icon={collapsed ? ChevronRightIcon : ExpandMoreIcon} /> {title}
-        </div>
-
-        {!collapsed && (
-          <div className='about__section__body'>{children}</div>
-        )}
-      </div>
-    );
-  }
-
-}
-
 class About extends PureComponent {
 
   static propTypes = {
     server: ImmutablePropTypes.map,
+    locale: ImmutablePropTypes.string,
     extendedDescription: ImmutablePropTypes.map,
     domainBlocks: ImmutablePropTypes.contains({
       isLoading: PropTypes.bool,
@@ -126,7 +88,7 @@ class About extends PureComponent {
   };
 
   render () {
-    const { multiColumn, intl, server, extendedDescription, domainBlocks, bubbleDomains } = this.props;
+    const { multiColumn, intl, server, extendedDescription, domainBlocks, bubbleDomains, locale } = this.props;
     const isLoading = server.get('isLoading');
 
     return (
@@ -175,18 +137,27 @@ class About extends PureComponent {
             ))}
           </Section>
 
-          <Section title={intl.formatMessage(messages.rules)}>
-            {!isLoading && (server.get('rules', ImmutableList()).isEmpty() ? (
-              <p><FormattedMessage id='about.not_available' defaultMessage='This information has not been made available on this server.' /></p>
+          <RulesSection />
+
+          <Section title={intl.formatMessage(messages.bubble)} onOpen={this.handleBubbleDomainsOpen}>
+            {bubbleDomains.get('isLoading') ? (
+              <Skeleton width='100%' />
+            ) : (bubbleDomains.get('isAvailable') ? (
+              <>
+                <p><FormattedMessage id='about.bubble.preamble' defaultMessage='This server provides a "bubble timeline", which displays content from these other servers in the fediverse that have been chosen by the admins of this server.' /></p>
+
+                {bubbleDomains.get('items').size > 0 && (
+                  <div className='about__bubble-domains'>
+                    {bubbleDomains.get('items').map(domain => (
+                      <div className='about__bubble-domains__domain' key={domain}>
+                        <h6 className='about__bubble-domains__domain__header'>{domain}</h6>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
             ) : (
-              <ol className='rules-list'>
-                {server.get('rules').map(rule => (
-                  <li key={rule.get('id')}>
-                    <div className='rules-list__text'>{rule.get('text')}</div>
-                    {rule.get('hint').length > 0 && (<div className='rules-list__hint'>{rule.get('hint')}</div>)}
-                  </li>
-                ))}
-              </ol>
+              <p><FormattedMessage id='about.not_available' defaultMessage='This information has not been made available on this server.' /></p>
             ))}
           </Section>
 

@@ -191,6 +191,8 @@ namespace :emojis do
 
   desc 'Generate a spritesheet of emojis'
   task :generate_emoji_sheet do
+    require 'vips'
+
     src = Rails.root.join('app', 'javascript', 'mastodon', 'features', 'emoji', 'emoji_data.json')
     sheet = Oj.load(File.read(src))
 

@@ -4,6 +4,7 @@ require 'singleton'
 
 class ActivityPub::TagManager
   include Singleton
+  include JsonLdHelper
   include RoutingHelper
 
   CONTEXT = 'https://www.w3.org/ns/activitystreams'
@@ -17,7 +18,7 @@ class ActivityPub::TagManager
   end
 
   def url_for(target)
-    return target.url if target.respond_to?(:local?) && !target.local?
+    return unsupported_uri_scheme?(target.url) ? nil : target.url if target.respond_to?(:local?) && !target.local?
 
     return unless target.respond_to?(:object_type)
 
@@ -121,13 +122,9 @@ class ActivityPub::TagManager
   # Unlisted and private statuses go out primarily to the followers collection
   # Others go out only to the people they mention
   def to(status)
-    to = []
-
-    to << uri_for(status.quote.account) if status.quote?
-
     case status.visibility
     when 'public'
-      to << COLLECTIONS[:public]
+      [COLLECTIONS[:public]]
     when 'unlisted', 'private'
       to << followers_uri_for(status.account)
     when 'direct', 'limited'

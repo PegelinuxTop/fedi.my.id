@@ -16,6 +16,7 @@
 #  media_descriptions           :text             is an Array
 #  poll_options                 :string           is an Array
 #  sensitive                    :boolean
+#  quote_id                     :bigint(8)
 #
 
 class StatusEdit < ApplicationRecord
@@ -63,8 +64,6 @@ class StatusEdit < ApplicationRecord
       end
     end.take(Status::MEDIA_ATTACHMENTS_LIMIT)
   end
-
-  delegate :quote?, to: :status
 
   def proper
     self

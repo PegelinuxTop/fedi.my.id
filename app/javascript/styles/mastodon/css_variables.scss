@@ -20,13 +20,17 @@
   --on-surface-color: #{color.adjust($ui-base-color, $alpha: -0.5)};
   --avatar-border-radius: 8px;
   --media-outline-color: #{rgba(#fcf8ff, 0.15)};
-  --overlay-icon-shadow: drop-shadow(0 0 8px #{rgba($base-shadow-color, 0.25)});
+  --overlay-icon-shadow: drop-shadow(0 0 8px #{rgba($base-shadow-color, 0.35)});
   --error-background-color: #{darken($error-red, 16%)};
   --error-active-background-color: #{darken($error-red, 12%)};
   --on-error-color: #fff;
   --rich-text-container-color: rgba(87, 24, 60, 100%);
   --rich-text-text-color: rgba(255, 175, 212, 100%);
   --rich-text-decorations-color: rgba(128, 58, 95, 100%);
+  --nested-card-background: color(from #{$ui-highlight-color} srgb r g b / 5%);
+  --nested-card-text: #{$secondary-text-color};
+  --nested-card-border: 1px solid
+    color(from #{$ui-highlight-color} srgb r g b / 15%);
   --input-placeholder-color: #{$dark-text-color};
   --input-background-color: var(--surface-variant-background-color);
   --on-input-color: #{$secondary-text-color};
