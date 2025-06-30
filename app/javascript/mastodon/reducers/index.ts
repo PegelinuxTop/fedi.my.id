@@ -21,6 +21,7 @@ import { markersReducer } from './markers';
 import media_attachments from './media_attachments';
 import meta from './meta';
 import { modalReducer } from './modal';
+import { navigationReducer } from './navigation';
 import { notificationGroupsReducer } from './notification_groups';
 import { notificationPolicyReducer } from './notification_policy';
 import { notificationRequestsReducer } from './notification_requests';
@@ -35,6 +36,7 @@ import settings from './settings';
 import status_lists from './status_lists';
 import statuses from './statuses';
 import { suggestionsReducer } from './suggestions';
+import { followedTagsReducer } from './tags';
 import timelines from './timelines';
 import trends from './trends';
 import user_lists from './user_lists';
@@ -66,6 +68,7 @@ const reducers = {
   height_cache,
   custom_emojis,
   lists: listsReducer,
+  followedTags: followedTagsReducer,
   filters,
   conversations,
   suggestions: suggestionsReducer,
@@ -76,6 +79,7 @@ const reducers = {
   history,
   notificationPolicy: notificationPolicyReducer,
   notificationRequests: notificationRequestsReducer,
+  navigation: navigationReducer,
 };
 
 // We want the root state to be an ImmutableRecord, which is an object with a defined list of keys,

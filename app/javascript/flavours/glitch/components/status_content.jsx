@@ -355,7 +355,7 @@ class StatusContent extends PureComponent {
     if (this.props.onClick) {
       return (
         <>
-          <div className={classNames} ref={this.setRef} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp} tabIndex={0} key='status-content' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
+          <div className={classNames} ref={this.setRef} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp} key='status-content' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
             <div className={textClassNames} lang={language} dangerouslySetInnerHTML={content} />
 
             {poll}
@@ -367,7 +367,7 @@ class StatusContent extends PureComponent {
       );
     } else {
       return (
-        <div className={classNames} ref={this.setRef} tabIndex={0} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
+        <div className={classNames} ref={this.setRef} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
           <div className={textClassNames} lang={language} dangerouslySetInnerHTML={content} />
 
           {poll}
