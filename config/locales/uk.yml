@@ -570,6 +570,9 @@ uk:
         all: Усі
         limited: Обмежені
         title: Модерація
+      moderation_notes:
+        create: Додати нотатку модерації
+        title: Нотатки модераторів
       private_comment: Приватний коментар
       public_comment: Публічний коментар
       purge: Очисти
@@ -2038,7 +2041,6 @@ uk:
       post_action: Створити
       post_step: Привітайтеся зі світом, з текстом, світлинами, відео та опитуваннями.
       post_title: Напишіть свій перший допис
-      share_action: Поділитися
       share_step: Розкажіть друзям, як знайти вас на Mastodon.
       share_title: Поділіться своїм профілем Mastodon
       sign_in_action: Увійти

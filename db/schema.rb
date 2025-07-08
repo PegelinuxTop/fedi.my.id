@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_05_110215) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -191,8 +191,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
     t.boolean "hide_collections"
     t.integer "avatar_storage_schema_version"
     t.integer "header_storage_schema_version"
-    t.datetime "sensitized_at", precision: nil
     t.integer "suspension_origin"
+    t.datetime "sensitized_at", precision: nil
     t.boolean "trendable"
     t.datetime "reviewed_at", precision: nil
     t.datetime "requested_review_at", precision: nil
@@ -587,6 +587,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
     t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
+  create_table "instance_moderation_notes", force: :cascade do |t|
+    t.string "domain", null: false
+    t.bigint "account_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_instance_moderation_notes_on_domain"
+  end
+
   create_table "invites", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "code", default: "", null: false
@@ -602,12 +611,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
   end
 
   create_table "ip_blocks", force: :cascade do |t|
-    t.inet "ip", default: "0.0.0.0", null: false
-    t.integer "severity", default: 0, null: false
-    t.datetime "expires_at", precision: nil
-    t.text "comment", default: "", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.datetime "expires_at", precision: nil
+    t.inet "ip", default: "0.0.0.0", null: false
+    t.integer "severity", default: 0, null: false
+    t.text "comment", default: "", null: false
     t.index ["ip"], name: "index_ip_blocks_on_ip", unique: true
   end
 
@@ -913,6 +922,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
     t.string "activity_uri"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "legacy", default: false, null: false
     t.index ["account_id", "quoted_account_id"], name: "index_quotes_on_account_id_and_quoted_account_id"
     t.index ["activity_uri"], name: "index_quotes_on_activity_uri", unique: true, where: "(activity_uri IS NOT NULL)"
     t.index ["approval_uri"], name: "index_quotes_on_approval_uri", where: "(approval_uri IS NOT NULL)"
@@ -1394,6 +1404,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_204643) do
   add_foreign_key "follows", "accounts", name: "fk_32ed1b5560", on_delete: :cascade
   add_foreign_key "generated_annual_reports", "accounts"
   add_foreign_key "identities", "users", name: "fk_bea040f377", on_delete: :cascade
+  add_foreign_key "instance_moderation_notes", "accounts", on_delete: :cascade
   add_foreign_key "invites", "users", on_delete: :cascade
   add_foreign_key "list_accounts", "accounts", on_delete: :cascade
   add_foreign_key "list_accounts", "follow_requests", on_delete: :cascade

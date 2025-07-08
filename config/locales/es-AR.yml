@@ -578,6 +578,13 @@ es-AR:
         all: Todas
         limited: Limitadas
         title: Moderación
+      moderation_notes:
+        create: Agregar nota de moderación
+        created_msg: "¡Nota de moderación de instancia creada!"
+        description_html: Ver y dejar notas para otros moderadores y a tu yo futuro
+        destroyed_msg: "¡Nota de moderación de instancia eliminada con éxito!"
+        placeholder: Información sobre esta instancia, acciones tomadas o cualquier otra cosa que te ayude a moderar esta instancia en el futuro.
+        title: Notas de moderación
       private_comment: Comentario privado
       public_comment: Comentario público
       purge: Purgar
@@ -2068,7 +2075,6 @@ es-AR:
       post_action: Redactar
       post_step: Decile "Hola" al mundo con textos, fotos, videos o encuestas.
       post_title: Escribí tu primer mensaje
-      share_action: Compartir
       share_step: Hacé que tus amistades sepan cómo encontrarte en Mastodon.
       share_title: Compartí tu perfil de Mastodon
       sign_in_action: Iniciá sesión
