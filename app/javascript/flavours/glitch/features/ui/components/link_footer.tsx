@@ -19,9 +19,8 @@ export const LinkFooter: React.FC<{
   return (
     <div className='link-footer'>
       <p>
-        New to Mastodon and want an easier transition? Try the{' '}
-        <a href='https://elk.urusai.social/'>Alternative UI (Elk)</a> for a more
-        &quot;bird-like&quot; interface!
+        Try the <a href='https://phanpy.fedi.my.id/'>Alternative UI (Phanpy)</a>
+        .
       </p>
       <p>
         <strong>{domain}</strong>:{' '}

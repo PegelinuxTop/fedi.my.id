@@ -13,8 +13,8 @@ ARG BASE_REGISTRY="docker.io"
 
 # Ruby image to use for base image, change with [--build-arg RUBY_VERSION="3.4.x"]
 # renovate: datasource=docker depName=docker.io/ruby
-ARG RUBY_VERSION="3.4.5"
-# # Node.js version to use in base image, change with [--build-arg NODE_MAJOR_VERSION="20"]
+ARG RUBY_VERSION="3.3.7"
+# # Node version to use in base image, change with [--build-arg NODE_MAJOR_VERSION="20"]
 # renovate: datasource=node-version depName=node
 ARG NODE_MAJOR_VERSION="22"
 # Debian image to use for base image, change with [--build-arg DEBIAN_VERSION="trixie"]
@@ -308,6 +308,17 @@ RUN \
   # Cleanup temporary files
   rm -fr /opt/mastodon/tmp;
 
+# Add qrtools to the final image
+FROM build AS qrtools
+RUN \
+  apt-get update && \
+  apt-get install -y zstd wget && \
+  wget https://github.com/sorairolake/qrtool/releases/download/v0.11.6/qrtool-v0.11.6-x86_64-unknown-linux-musl.tar.zst && \
+  tar --use-compress-program=unzstd -xf qrtool-v0.11.6-x86_64-unknown-linux-musl.tar.zst && \
+  cp qrtool-v0.11.6-x86_64-unknown-linux-musl/qrtool /usr/local/bin/ && \
+  chmod +x /usr/local/bin/qrtool && \
+  rm -rf qrtool-v0.11.6-x86_64-unknown-linux-musl.tar.zst qrtool-v0.11.6-x86_64-unknown-linux-musl
+
 # Prep final Mastodon Ruby layer
 FROM ruby AS mastodon
 
@@ -374,6 +385,8 @@ COPY --from=libvips /usr/local/libvips/lib /usr/local/lib
 # Copy ffpmeg components to layer
 COPY --from=ffmpeg /usr/local/ffmpeg/bin /usr/local/bin
 COPY --from=ffmpeg /usr/local/ffmpeg/lib /usr/local/lib
+# Copy qrtools components to layer
+COPY --from=qrtools /usr/local/bin/qrtool /usr/local/bin/qrtool
 
 RUN \
   ldconfig; \
