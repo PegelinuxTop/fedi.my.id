@@ -71,4 +71,7 @@
     dashboard_cache_warmer_scheduler:
       interval: 2 hours
       class: Scheduler::Admin::DashboardCacheWarmerScheduler
+    fasp_follow_recommendation_cleanup_scheduler:
+      interval: 1 day
+      class: Scheduler::Fasp::FollowRecommendationCleanupScheduler
       queue: scheduler
