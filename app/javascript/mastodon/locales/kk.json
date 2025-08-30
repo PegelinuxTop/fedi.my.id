@@ -1,6 +1,7 @@
 {
   "about.blocks": "Модерацияланған серверлер",
   "about.contact": "Байланыс:",
+  "about.default_locale": "Әдепкі",
   "about.disclaimer": "Mastodon деген тегін, бастапқы коды ашық бағдарламалық жасақтама және Mastodon gGmbH-тің сауда маркасы.",
   "about.domain_blocks.no_reason_available": "Себеп қолжетімсіз",
   "about.domain_blocks.preamble": "Mastodon әдетте сізге Fediverse'тің кез келген серверінің қолданушыларының контентін көріп, олармен байланысуға мүмкіндік береді. Осы белгілі серверде жасалған ережеден тыс жағдайлар міне.",
@@ -139,8 +140,6 @@
   "confirmations.logout.message": "Шығатыныңызға сенімдісіз бе?",
   "confirmations.mute.confirm": "Үнсіз қылу",
   "confirmations.redraft.confirm": "Өшіруді құптау",
-  "confirmations.reply.confirm": "Жауап",
-  "confirmations.reply.message": "Жауабыңыз жазып жатқан жазбаңыздың үстіне кетеді. Жалғастырамыз ба?",
   "confirmations.unfollow.confirm": "Оқымау",
   "confirmations.unfollow.message": "\"{name} атты қолданушыға енді жазылғыңыз келмей ме?",
   "conversation.delete": "Пікірталасты өшіру",

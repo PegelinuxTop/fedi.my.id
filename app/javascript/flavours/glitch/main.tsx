@@ -9,7 +9,11 @@ import * as perf from 'flavours/glitch/performance';
 import ready from 'flavours/glitch/ready';
 import { store } from 'flavours/glitch/store';
 
-import { isProduction, isDevelopment } from './utils/environment';
+import {
+  isProduction,
+  isDevelopment,
+  isModernEmojiEnabled,
+} from './utils/environment';
 
 function main() {
   perf.start('main()');
@@ -27,6 +31,13 @@ function main() {
       Globals.assign({
         skipAnimation: true,
       });
+    }
+
+    if (isModernEmojiEnabled()) {
+      const { initializeEmoji } = await import(
+        '@/flavours/glitch/features/emoji'
+      );
+      await initializeEmoji();
     }
 
     const root = createRoot(mountNode);
