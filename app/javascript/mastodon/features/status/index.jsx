@@ -160,7 +160,7 @@ class Status extends ImmutablePureComponent {
   };
 
   UNSAFE_componentWillMount () {
-    this.props.dispatch(fetchStatus(this.props.params.statusId));
+    this.props.dispatch(fetchStatus(this.props.params.statusId, { forceFetch: true }));
   }
 
   componentDidMount () {
@@ -171,7 +171,7 @@ class Status extends ImmutablePureComponent {
 
   UNSAFE_componentWillReceiveProps (nextProps) {
     if (nextProps.params.statusId !== this.props.params.statusId && nextProps.params.statusId) {
-      this.props.dispatch(fetchStatus(nextProps.params.statusId));
+      this.props.dispatch(fetchStatus(nextProps.params.statusId, { forceFetch: true }));
     }
 
     if (nextProps.status && nextProps.status.get('id') !== this.state.loadedStatusId) {
@@ -298,6 +298,12 @@ class Status extends ImmutablePureComponent {
       );
     }
     dispatch(openModal({ modalType: 'COMPOSE_PRIVACY', modalProps: { statusId, onChange: handleChange } }));
+  };
+
+  handleQuote = (status) => {
+    const { dispatch } = this.props;
+
+    dispatch(quoteComposeById(status.get('id')));
   };
 
   handleEditClick = (status) => {
@@ -505,12 +511,14 @@ class Status extends ImmutablePureComponent {
   componentDidUpdate (prevProps) {
     const { status, ancestorsIds, descendantsIds } = this.props;
 
-    if (status && (ancestorsIds.length > prevProps.ancestorsIds.length || prevProps.status?.get('id') !== status.get('id'))) {
+    const isSameStatus = status && (prevProps.status?.get('id') === status.get('id'));
+
+    if (status && (ancestorsIds.length > prevProps.ancestorsIds.length || !isSameStatus)) {
       this._scrollStatusIntoView();
     }
 
     // Only highlight replies after the initial load
-    if (prevProps.descendantsIds.length) {
+    if (prevProps.descendantsIds.length && isSameStatus) {
       const newRepliesIds = difference(descendantsIds, prevProps.descendantsIds);
       
       if (newRepliesIds.length) {
@@ -572,14 +580,6 @@ class Status extends ImmutablePureComponent {
     const isLocal = status.getIn(['account', 'acct'], '').indexOf('@') === -1;
     const isIndexable = !status.getIn(['account', 'noindex']);
 
-    if (!isLocal) {
-      remoteHint = (
-        <RefreshController
-          statusId={status.get('id')}
-        />
-      );
-    }
-
     const handlers = {
       reply: this.handleHotkeyReply,
       favourite: this.handleHotkeyFavourite,
@@ -599,7 +599,7 @@ class Status extends ImmutablePureComponent {
           showBackButton
           multiColumn={multiColumn}
           extraButton={(
-            <button type='button' className='column-header__button' title={intl.formatMessage(status.get('hidden') ? messages.revealAll : messages.hideAll)} aria-label={intl.formatMessage(status.get('hidden') ? messages.revealAll : messages.hideAll)} onClick={this.handleToggleAll}><Icon id={status.get('hidden') ? 'eye-slash' : 'eye'} icon={status.get('hidden') ? VisibilityOffIcon : VisibilityIcon} /></button>
+            <button type='button' className='column-header__button' title={intl.formatMessage(status.get('hidden') ? messages.revealAll : messages.hideAll)} aria-label={intl.formatMessage(status.get('hidden') ? messages.revealAll : messages.hideAll)} onClick={this.handleToggleAll}><Icon id={status.get('hidden') ? 'eye' : 'eye-slash'} icon={status.get('hidden') ? VisibilityIcon : VisibilityOffIcon} /></button>
           )}
         />
 
@@ -632,6 +632,7 @@ class Status extends ImmutablePureComponent {
                   onDelete={this.handleDeleteClick}
                   onRevokeQuote={this.handleRevokeQuoteClick}
                   onQuotePolicyChange={this.handleQuotePolicyChange}
+                  onQuote={this.handleQuote}
                   onEdit={this.handleEditClick}
                   onDirect={this.handleDirectClick}
                   onMention={this.handleMentionClick}
@@ -650,7 +651,12 @@ class Status extends ImmutablePureComponent {
             </Hotkeys>
 
             {descendants}
-            {remoteHint}
+            
+            <RefreshController
+              isLocal={isLocal}
+              statusId={status.get('id')}
+              statusCreatedAt={status.get('created_at')}
+            />
           </div>
         </ScrollContainer>
 
