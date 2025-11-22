@@ -44,6 +44,7 @@ import {
   ConfirmRevokeQuoteModal,
   QuietPostQuoteInfoModal,
 } from './confirmation_modals';
+import { PrivateQuoteNotify } from './confirmation_modals/private_quote_notify';
 import DeprecatedSettingsModal from './deprecated_settings_modal';
 import DoodleModal from './doodle_modal';
 import { FavouriteModal } from './favourite_modal';
@@ -52,7 +53,6 @@ import { MediaModal } from './media_modal';
 import { ModalPlaceholder } from './modal_placeholder';
 import VideoModal from './video_modal';
 import { VisibilityModal } from './visibility_modal';
-import { PrivateQuoteNotify } from './confirmation_modals/private_quote_notify';
 
 export const MODAL_COMPONENTS = {
   'MEDIA': () => Promise.resolve({ default: MediaModal }),

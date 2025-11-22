@@ -23,9 +23,9 @@ import { WithRouterPropTypes } from 'mastodon/utils/react_router';
 import { me, quickBoosting } from '../../initial_state';
 import { IconButton } from '../icon_button';
 import { BoostButton } from '../status/boost_button';
+import { quoteItemState, selectStatusState } from '../status/boost_button_utils';
 
 import { RemoveQuoteHint } from './remove_quote_hint';
-import { quoteItemState, selectStatusState } from '../status/boost_button_utils';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },

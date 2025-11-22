@@ -601,30 +601,34 @@ const startServer = async () => {
   /**
    * @param {string} kind
    * @param {ResolvedAccount} account
-   * @returns {Promise.<{ localAccess: boolean, remoteAccess: boolean }>}
+   * @returns {Promise.<{ localAccess: boolean, bubbleAccess: boolean, remoteAccess: boolean }>}
    */
   const getFeedAccessSettings = async (kind, account) => {
-    const access = { localAccess: true, remoteAccess: true };
+    const access = { localAccess: true, bubbleAccess: true, remoteAccess: true };
 
     if (account.permissions & PERMISSION_VIEW_FEEDS) {
       return access;
     }
 
-    let localAccessVar, remoteAccessVar;
+    let localAccessVar, bubbleAccessVar, remoteAccessVar;
 
     if (kind === 'hashtag') {
       localAccessVar = 'local_topic_feed_access';
+      bubbleAccessVar = 'bubble_topic_feed_access';
       remoteAccessVar = 'remote_topic_feed_access';
     } else {
       localAccessVar = 'local_live_feed_access';
+      bubbleAccessVar = 'bubble_live_feed_access';
       remoteAccessVar = 'remote_live_feed_access';
     }
 
-    const result = await pgPool.query('SELECT var, value FROM settings WHERE var IN ($1, $2)', [localAccessVar, remoteAccessVar]);
+    const result = await pgPool.query('SELECT var, value FROM settings WHERE var IN ($1, $2, $3)', [localAccessVar, bubbleAccessVar, remoteAccessVar]);
 
     result.rows.forEach((row) => {
       if (row.var === localAccessVar) {
         access.localAccess = row.value !== "--- disabled\n";
+      } else if (row.var === bubbleAccessVar) {
+        access.bubbleAccess = row.value !== "--- disabled\n";
       } else {
         access.remoteAccess = row.value !== "--- disabled\n";
       }
@@ -643,11 +647,12 @@ const startServer = async () => {
    * @param {Object} options
    * @param {boolean} options.needsFiltering
    * @param {boolean=} options.filterLocal
+   * @param {boolean=} options.filterBubble
    * @param {boolean=} options.filterRemote
    * @param {boolean=} options.allowLocalOnly
    * @returns {SubscriptionListener}
    */
-  const streamFrom = (channelIds, req, log, output, attachCloseHandler, destinationType, { needsFiltering, filterLocal, filterRemote, allowLocalOnly } = { needsFiltering: false, filterLocal: false, filterRemote: false, allowLocalOnly: false }) => {
+  const streamFrom = (channelIds, req, log, output, attachCloseHandler, destinationType, { needsFiltering, filterLocal, filterBubble, filterRemote, allowLocalOnly } = { needsFiltering: false, filterLocal: false, filterBubble: false, filterRemote: false, allowLocalOnly: false }) => {
     log.info({ channelIds }, `Starting stream`);
 
     /**
@@ -753,6 +758,8 @@ const startServer = async () => {
         if (accountDomain) {
           // @ts-expect-error
           queries.push(client.query('SELECT 1 FROM account_domain_blocks WHERE account_id = $1 AND domain = $2', [req.accountId, accountDomain]));
+          // @ts-expect-error
+          queries.push(client.query('SELECT 1 FROM bubble_domains WHERE domain = $1', [accountDomain]));
         }
 
         // @ts-expect-error
@@ -767,7 +774,7 @@ const startServer = async () => {
           // Handling blocks & mutes and domain blocks: If one of those applies,
           // then we don't transmit the payload of the event to the client
           // @ts-expect-error
-          if (values[0].rows.length > 0 || (accountDomain && values[1].rows.length > 0)) {
+          if (values[0].rows.length > 0 || (accountDomain && (values[1].rows.length > 0 || (filterBubble && values[2].rows.length > 0)))) {
             return;
           }
 
@@ -784,7 +791,7 @@ const startServer = async () => {
           // @ts-ignore
           if (!req.cachedFilters) {
             // @ts-expect-error
-            const filterRows = values[accountDomain ? 2 : 1].rows;
+            const filterRows = values[accountDomain ? 3 : 1].rows;
 
             req.cachedFilters = filterRows.reduce((cache, filter) => {
               if (cache[filter.id]) {
@@ -811,12 +818,7 @@ const startServer = async () => {
               return cache;
             }, {});
 
-            // Construct the regular expressions for the custom filters: This
-            // needs to be done in a separate loop as the database returns one
-            // filterRow per keyword, so we need all the keywords before
-            // constructing the regular expression
-            // @ts-expect-error
-            Object.keys(req.cachedFilters).forEach((key) => {
+          Object.keys(req.cachedFilters).forEach((key) => {
               // @ts-expect-error
               req.cachedFilters[key].regexp = new RegExp(req.cachedFilters[key].keywords.map(([keyword, whole_word]) => {
                 let expr = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -1059,7 +1061,7 @@ const startServer = async () => {
    * @param {Request} req
    * @param {string} name
    * @param {StreamParams} params
-   * @returns {Promise.<{ channelIds: string[], options: { needsFiltering: boolean, filterLocal?: boolean, filterRemote?: boolean, allowLocalOnly?: boolean } }>}
+   * @returns {Promise.<{ channelIds: string[], options: { needsFiltering: boolean, filterLocal?: boolean, filterBubble?: boolean, filterRemote?: boolean, allowLocalOnly?: boolean } }>}
    */
   const channelNameToIds = (req, name, params) => new Promise((resolve, reject) => {
     /**
@@ -1068,10 +1070,10 @@ const startServer = async () => {
      * @param {{ needsFiltering: boolean, allowLocalOnly: boolean }} options
      */
     const resolveFeed = (feedKind, channelId, options) => {
-      getFeedAccessSettings(feedKind, req).then(({ localAccess, remoteAccess }) => {
+      getFeedAccessSettings(feedKind, req).then(({ localAccess, bubbleAccess, remoteAccess }) => {
         resolve({
           channelIds: [channelId],
-          options: { ...options, filterLocal: !localAccess, filterRemote: !remoteAccess },
+          options: { ...options, filterLocal: !localAccess, filterBubble: !bubbleAccess, filterRemote: !remoteAccess },
         });
       }).catch(() => {
         reject(new Error('Error getting feed access settings'));
@@ -1102,6 +1104,9 @@ const startServer = async () => {
     case 'public:local':
       resolveFeed('public', 'timeline:public:local', { needsFiltering: true, allowLocalOnly: true });
       break;
+    case 'public:bubble':
+      resolveFeed('public', 'timeline:public:bubble', { needsFiltering: true, allowLocalOnly: false });
+      break;
     case 'public:remote':
       resolveFeed('public', 'timeline:public:remote', { needsFiltering: true, allowLocalOnly: false });
       break;
@@ -1113,6 +1118,9 @@ const startServer = async () => {
       break;
     case 'public:local:media':
       resolveFeed('public', 'timeline:public:local:media', { needsFiltering: true, allowLocalOnly: true });
+      break;
+    case 'public:bubble:media':
+      resolveFeed('public', 'timeline:public:bubble:media', { needsFiltering: true, allowLocalOnly: false });
       break;
     case 'public:remote:media':
       resolveFeed('public', 'timeline:public:remote:media', { needsFiltering: true, allowLocalOnly: false });

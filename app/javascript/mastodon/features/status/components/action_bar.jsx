@@ -7,6 +7,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
 import { BoostButton } from '@/mastodon/components/status/boost_button';
+import { quoteItemState, selectStatusState } from '@/mastodon/components/status/boost_button_utils';
 import BookmarkIcon from '@/material-icons/400-24px/bookmark-fill.svg?react';
 import BookmarkBorderIcon from '@/material-icons/400-24px/bookmark.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
@@ -20,7 +21,6 @@ import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'mastodon/
 
 import { IconButton } from '../../../components/icon_button';
 import { me, quickBoosting } from '../../../initial_state';
-import { quoteItemState, selectStatusState } from '@/mastodon/components/status/boost_button_utils';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
@@ -78,6 +78,7 @@ class ActionBar extends PureComponent {
     onBookmark: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     onRevokeQuote: PropTypes.func,
+    onQuote: PropTypes.func,
     onQuotePolicyChange: PropTypes.func,
     onEdit: PropTypes.func.isRequired,
     onDirect: PropTypes.func.isRequired,
