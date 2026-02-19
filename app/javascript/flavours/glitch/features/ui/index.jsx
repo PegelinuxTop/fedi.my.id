@@ -30,7 +30,7 @@ import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../act
 import { clearHeight } from '../../actions/height_cache';
 import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
 import { expandHomeTimeline } from '../../actions/timelines';
-import { initialState, me, owner, singleUserMode, trendsEnabled, landingPage, localLiveFeedAccess, disableHoverCards } from '../../initial_state';
+import { initialState, me, owner, singleUserMode, trendsEnabled, disableHoverCards, autoPlayGif, landingPage, localLiveFeedAccess } from '../../initial_state';
 import { areCollectionsEnabled } from '../collections/utils';
 
 import BundleColumnError from './components/bundle_column_error';

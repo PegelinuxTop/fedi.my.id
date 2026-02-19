@@ -25,6 +25,7 @@ import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import EmojiPickerDropdown from '../../features/compose/containers/emoji_picker_dropdown_container';
 import { me, maxReactions, quickBoosting } from '../../initial_state';
+
 import { IconButton } from '../icon_button';
 import { RelativeTimestamp } from '../relative_timestamp';
 import { BoostButton } from '../status/boost_button';
