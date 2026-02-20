@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Settings::FlavoursController < Settings::BaseController
+  include ThemeHelper
   layout 'admin'
 
   before_action :authenticate_user!
