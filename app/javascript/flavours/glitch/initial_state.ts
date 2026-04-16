@@ -205,6 +205,7 @@ export const maxFeedHashtags = initialState?.max_feed_hashtags ?? 4;
 export const favouriteModal = getMeta('favourite_modal');
 export const pollLimits = initialState?.poll_limits;
 export const defaultContentType = getMeta('default_content_type');
+export const useSystemEmojiFont = getMeta('system_emoji_font');
 export const maxReactions = initialState?.max_reactions ?? 1;
 export const visibleReactions = getMeta('visible_reactions');
 
