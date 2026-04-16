@@ -29,7 +29,8 @@ import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../act
 import { clearHeight } from '../../actions/height_cache';
 import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
 import { expandHomeTimeline } from '../../actions/timelines';
-import { initialState, me, owner, singleUserMode, trendsEnabled, landingPage, localLiveFeedAccess, disableHoverCards } from '../../initial_state';
+import { initialState, me, owner, singleUserMode, trendsEnabled, disableHoverCards, landingPage, localLiveFeedAccess } from '../../initial_state';
+import { areCollectionsEnabled } from '../collections/utils';
 
 import BundleColumnError from './components/bundle_column_error';
 import { HashtagMenuController } from './components/hashtag_menu_controller';
@@ -92,7 +93,6 @@ import { WrappedSwitch, WrappedRoute } from './util/react_router_helpers';
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
 // Without this it ends up in ~8 very commonly used bundles.
 import '../../components/status';
-import { areCollectionsEnabled } from '../collections/utils';
 import { getNavigationSkipLinkId, SkipLinks } from './components/skip_links';
 
 const messages = defineMessages({
