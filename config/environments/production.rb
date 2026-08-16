@@ -55,7 +55,13 @@ Rails.application.configure do
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   # Use a different cache store in production.
-  config.cache_store = :redis_cache_store, REDIS_CONFIGURATION.cache
+  # During Docker builds, assets:precompile runs with SECRET_KEY_BASE_DUMMY=1 and no Redis
+  # available, so fall back to a null store (the static 500 page render touches Rails.cache).
+  config.cache_store = if ENV['SECRET_KEY_BASE_DUMMY']
+                         :null_store
+                       else
+                         [:redis_cache_store, REDIS_CONFIGURATION.cache]
+                       end
 
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = '/health'
