@@ -772,6 +772,7 @@ class Status extends ImmutablePureComponent {
                   collapsible
                   media={media}
                   onCollapsedToggle={this.handleCollapsedToggle}
+                  zoomEmojisOnHover={settings.get('zoom_emojis_on_hover')}
                   {...statusContentProps}
                 />
 

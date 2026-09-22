@@ -84,3 +84,4 @@ storybook-static
 import_emoji.rb
 log.txt
 public.old/
+.cachebro/
