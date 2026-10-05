@@ -8,6 +8,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
+import { DisplayName } from '@/flavours/glitch/components/display_name';
 import DeleteIcon from '@/material-icons/400-24px/delete.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
@@ -16,9 +17,8 @@ import { acceptNotificationRequest, dismissNotificationRequest } from 'flavours/
 import { initReport } from 'flavours/glitch/actions/reports';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { CheckBox } from 'flavours/glitch/components/check_box';
-import { DisplayName } from '@/flavours/glitch/components/display_name';
-import { IconButton } from 'flavours/glitch/components/icon_button';
 import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
+import { IconButton } from 'flavours/glitch/components/icon_button';
 import { makeGetAccount } from 'flavours/glitch/selectors';
 import { toCappedNumber } from 'flavours/glitch/utils/numbers';
 
