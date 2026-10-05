@@ -19,11 +19,11 @@ import {
 } from 'mastodon/actions/notification_requests';
 import { changeSetting } from 'mastodon/actions/settings';
 import { CheckBox } from 'mastodon/components/check_box';
+import { Dropdown } from 'mastodon/components/dropdown_menu';
 import { Column } from '@/mastodon/components/column';
 import { ColumnHeader as LegacyColumnHeader } from '@/mastodon/components/column/header';
 import { Icon } from 'mastodon/components/icon';
 import ScrollableList from 'mastodon/components/scrollable_list';
-import { Dropdown } from 'mastodon/components/dropdown_menu';
 
 import { NotificationRequest } from './components/notification_request';
 import { PolicyControls } from './components/policy_controls';
