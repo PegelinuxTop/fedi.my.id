@@ -153,6 +153,7 @@ export default tseslint.config([
   formatjs.configs.strict,
   storybook.configs['flat/recommended'],
   {
+    files: ['**/*.js', '**/*.jsx', '**/*.mjs', '**/*.ts', '**/*.tsx'],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -399,6 +400,13 @@ export default tseslint.config([
       '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/no-useless-default-assignment': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
+    },
+  },
+  {
+    // The glitch flavour overlays a few locales by extending the vanilla ones.
+    files: ['app/javascript/flavours/glitch/locales/*.js'],
+    rules: {
+      'import/no-restricted-paths': 'off',
     },
   },
 ]);

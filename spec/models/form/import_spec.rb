@@ -5,9 +5,22 @@ require 'rails_helper'
 RSpec.describe Form::Import do
   subject { described_class.new(current_account: account, type: import_type, mode: import_mode, data: data) }
 
-  let(:account)     { Fabricate(:account) }
-  let(:data)        { fixture_file_upload(import_file) }
+  let(:account) { Fabricate(:account) }
+  let(:data)        { fixture_upload(import_file) }
   let(:import_mode) { 'merge' }
+
+  # `fixture_file_upload` treats a bare name as a path relative to the working
+  # directory when such a file exists, and this repository keeps a
+  # `domain_blocks.csv` at its root (the fork's blocklist export), which would
+  # shadow `spec/fixtures/files/domain_blocks.csv`. Resolve a bare fixture name
+  # explicitly; an already-open file or an explicit path is passed through.
+  def fixture_upload(name, mime_type = nil)
+    if name.is_a?(String)
+      path = Rails.root.join(file_fixture_path, name)
+      name = path.to_s if path.exist?
+    end
+    fixture_file_upload(name, mime_type)
+  end
 
   describe 'validations' do
     shared_examples 'incompatible import type' do |type, file|
@@ -44,7 +57,7 @@ RSpec.describe Form::Import do
     end
 
     describe 'when the import type is custom_filters' do
-      let(:data)        { fixture_file_upload(import_file, content_type) }
+      let(:data)        { fixture_upload(import_file, content_type) }
       let(:import_file) { File.open('spec/fixtures/files/custom_filters.json') }
       let(:import_type) { 'custom_filters' }
       let(:content_type) { 'application/json' }
@@ -271,7 +284,7 @@ RSpec.describe Form::Import do
 
     describe 'when importing json' do
       let(:import_type) { 'custom_filters' }
-      let(:data) { fixture_file_upload('custom_filters.json', 'application/json') }
+      let(:data) { fixture_upload('custom_filters.json', 'application/json') }
       let(:import_mode) { 'merge' }
       let(:expected_rows) do
         [
