@@ -1,0 +1,137 @@
+html[data-user-flavour='glitch'] #mastodon .compose-form__highlightable {
+  margin-bottom: 50px !important;
+}
+
+html[data-user-flavour='glitch'] #mastodon .compose-form__submit {
+  position: absolute;
+  right: -12px;
+  top: 100%;
+  margin-top: 24px;
+}
+
+html[data-user-flavour='glitch'] #mastodon .compose-form__submit button {
+  padding: 10px 20px;
+}
+
+html[data-user-flavour='glitch']
+  #mastodon
+  .focusable[tabindex]:not(.notification-ungrouped)
+  .full-width {
+  margin-inline: 0;
+}
+
+html[data-user-flavour='glitch']
+  #mastodon
+  .media-gallery__item
+  > .media-gallery__preview {
+  display: unset;
+  opacity: 0.5;
+}
+
+html[data-user-flavour='glitch'] #mastodon .status__action-bar-spacer {
+  min-width: 5px;
+}
+
+html[data-user-flavour='glitch'] #mastodon .status__relative-time {
+  margin-inline: auto 5px !important;
+  z-index: 2;
+  flex-grow: 0 !important;
+  min-width: 5ch !important;
+  max-width: unset !important;
+  justify-content: flex-end;
+}
+
+html[data-user-flavour='glitch'] #mastodon .status__relative-time time {
+  display: inline !important;
+}
+
+.reactions-bar {
+  width: unset;
+  margin-top: 8px;
+}
+
+.reactions-bar button {
+  border-radius: 6px !important;
+  padding-block: 2px;
+}
+
+.reactions-bar button .reactions-bar__item__emoji {
+  width: unset;
+  height: 2em;
+  max-width: 70px;
+  min-width: 2em;
+}
+
+.detailed-status .reactions-bar button .reactions-bar__item__emoji {
+  max-width: 400px;
+}
+
+.reactions-bar button:not(.active) {
+  border: 1px solid var(--border-color);
+  background: none;
+}
+
+.reactions-bar:empty {
+  display: none;
+}
+
+.reactions-bar .emoji-picker-dropdown {
+  align-self: stretch;
+}
+
+.reactions-bar .emoji-picker-dropdown button {
+  align-self: stretch;
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+html[data-user-flavour='glitch'] #mastodon .local-settings {
+  max-height: 700px !important;
+  width: 100%;
+}
+
+html[data-user-flavour='glitch'] #mastodon .glitch.local-settings__page {
+  padding: 20px;
+}
+
+html[data-user-flavour='glitch'] #mastodon .local-settings__navigation {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  background: none;
+  border-right: 1px solid var(--border-color);
+  width: auto;
+}
+
+html[data-user-flavour='glitch']
+  #mastodon
+  .local-settings__navigation
+  .local-settings__navigation__item:not(.close, .active) {
+  background: none;
+}
+
+html[data-user-flavour='glitch']
+  #mastodon
+  .local-settings__navigation
+  .local-settings__navigation__item {
+  border: 0;
+  flex-direction: column;
+  padding-inline: 8px;
+}
+
+html[data-user-flavour='glitch']
+  #mastodon
+  .local-settings__navigation
+  .local-settings__navigation__item
+  span {
+  font-size: 0.8em;
+}
+
+html[data-user-flavour='glitch']
+  #mastodon
+  .local-settings__navigation
+  [href='/settings/preferences'] {
+  margin-block: auto 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+}

@@ -8,14 +8,14 @@ import { connect } from 'react-redux';
 
 import escapeTextContentForBrowser from 'escape-html';
 
+import { CustomEmojiProvider } from '@/mastodon/components/emoji/context';
+import { EmojiHTML } from '@/mastodon/components/emoji/html';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { closeModal } from 'mastodon/actions/modal';
 import { IconButton } from 'mastodon/components/icon_button';
 import InlineAccount from 'mastodon/components/inline_account';
 import MediaAttachments from 'mastodon/components/media_attachments';
 import { RelativeTimestamp } from 'mastodon/components/relative_timestamp';
-import { EmojiHTML } from '@/mastodon/components/emoji/html';
-import { CustomEmojiProvider } from '@/mastodon/components/emoji/context';
 
 const mapStateToProps = (state, { statusId }) => ({
   language: state.getIn(['statuses', statusId, 'language']),
