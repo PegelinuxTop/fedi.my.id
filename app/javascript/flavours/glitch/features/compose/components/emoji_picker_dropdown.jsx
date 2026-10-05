@@ -7,6 +7,7 @@ import classNames from 'classnames';
 
 import { supportsPassiveEvents } from 'detect-passive-events';
 
+import AddReactionIcon from '@/material-icons/400-24px/add_reaction.svg?react';
 import MoodIcon from '@/material-icons/400-20px/mood.svg?react';
 import { IconButton } from '@/flavours/glitch/components/icon_button';
 import { injectIntl } from '@/flavours/glitch/components/intl';
@@ -28,6 +29,7 @@ const messages = defineMessages({
   objects: { id: 'emoji_button.objects', defaultMessage: 'Objects' },
   symbols: { id: 'emoji_button.symbols', defaultMessage: 'Symbols' },
   flags: { id: 'emoji_button.flags', defaultMessage: 'Flags' },
+  react: { id: 'status.react', defaultMessage: 'React' },
 });
 
 let EmojiPicker, Emoji; // load asynchronously
@@ -38,7 +40,8 @@ const notFoundFn = () => (
   <div className='emoji-mart-no-results'>
     <Emoji
       emoji='sleuth_or_spy'
-      size={32}
+      sheetSize={43}
+      size={33}
     />
 
     <div className='emoji-mart-no-results-label'>
@@ -249,8 +252,9 @@ class EmojiPickerMenuImpl extends PureComponent {
     return (
       <div className={classNames('emoji-picker-dropdown__menu', { selecting: modifierOpen })} style={style} ref={this.setRef}>
         <EmojiPicker
-          perLine={8}
-          emojiSize={22}
+          perLine={7}
+          emojiSize={28}
+          sheetSize={32}
           color=''
           emoji=''
           title={title}
@@ -287,6 +291,7 @@ class EmojiPickerDropdown extends PureComponent {
     onPickEmoji: PropTypes.func.isRequired,
     onSkinTone: PropTypes.func.isRequired,
     skinTone: PropTypes.number.isRequired,
+    react: PropTypes.bool,
     disabled: PropTypes.bool,
   };
 
@@ -321,7 +326,7 @@ class EmojiPickerDropdown extends PureComponent {
   };
 
   onToggle = (e) => {
-    if (!this.state.loading && (!e.key || e.key === 'Enter')) {
+    if (!this.state.disabled && !this.state.loading && (!e.key || e.key === 'Enter')) {
       if (this.state.active) {
         this.onHideDropdown();
       } else {
@@ -335,21 +340,21 @@ class EmojiPickerDropdown extends PureComponent {
   };
 
   render() {
-    const { intl, onPickEmoji, onSkinTone, skinTone, frequentlyUsedEmojis, disabled } = this.props;
-    const title = intl.formatMessage(messages.emoji);
+    const { intl, onPickEmoji, onSkinTone, skinTone, frequentlyUsedEmojis, react, disabled } = this.props;
+    const title = react ? intl.formatMessage(messages.react) : intl.formatMessage(messages.emoji);
+    const icon = react ? AddReactionIcon : MoodIcon;
     const { active, loading, target } = this.state;
 
     return (
       <div className='emoji-picker-dropdown' ref={this.setTargetRef}>
         <IconButton
-          title={title}
+          title={title || intl.formatMessage(messages.emoji)}
           aria-expanded={active}
           active={active}
-          iconComponent={MoodIcon}
+          iconComponent={icon}
           onClick={this.onToggle}
           disabled={disabled}
           id="emoji"
-          inverted
         />
 
         <Popover

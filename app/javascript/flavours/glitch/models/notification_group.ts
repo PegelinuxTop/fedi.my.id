@@ -8,6 +8,7 @@ import type {
   NotificationType,
   NotificationWithStatusType,
 } from 'flavours/glitch/api_types/notifications';
+import type { ApiStatusReactionJSON } from 'flavours/glitch/api_types/reaction';
 import type { ApiReportJSON } from 'flavours/glitch/api_types/reports';
 
 import type { ApiCollectionJSON } from '../api_types/collections';
@@ -98,8 +99,16 @@ export interface NotificationGroupCollectionUpdate extends BaseNotification<'col
   collection: Collection | null;
 }
 
+type StatusReaction = Omit<Omit<ApiStatusReactionJSON, 'account'>, 'count'>;
+
+export interface NotificationGroupReaction extends BaseNotification<'reaction'> {
+  statusId: string | undefined;
+  reaction: StatusReaction | undefined;
+}
+
 export type NotificationGroup =
   | NotificationGroupFavourite
+  | NotificationGroupReaction
   | NotificationGroupReblog
   | NotificationGroupStatus
   | NotificationGroupMention
@@ -167,6 +176,20 @@ export function createNotificationGroupFromJSON(
         sampleAccountIds,
         partial: false,
         ...groupWithoutStatus,
+      };
+    }
+    case 'reaction': {
+      const {
+        status_id: statusId,
+        reaction,
+        ...groupWithoutStatusOrReaction
+      } = group;
+      return {
+        statusId: statusId ?? undefined,
+        reaction,
+        sampleAccountIds,
+        partial: false,
+        ...groupWithoutStatusOrReaction,
       };
     }
     case 'admin.report': {
@@ -239,6 +262,13 @@ export function createNotificationGroupFromNotificationJSON(
         ...group,
         type: notification.type,
         statusId: notification.status?.id,
+      };
+    case 'reaction':
+      return {
+        ...group,
+        type: notification.type,
+        statusId: notification.status?.id,
+        reaction: notification.reaction,
       };
     case 'admin.report':
       return {
