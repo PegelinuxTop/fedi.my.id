@@ -119,7 +119,7 @@ export const IconButton = forwardRef<HTMLButtonElement, Props>(
 
     if (href != null) {
       contents = (
-        <a href={href} target='_blank' rel='noopener noreferrer'>
+        <a href={href} target='_blank' rel='noopener'>
           {contents}
         </a>
       );
