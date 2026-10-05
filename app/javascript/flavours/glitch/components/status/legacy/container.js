@@ -17,6 +17,8 @@ import {
   unbookmark,
   pin,
   unpin,
+  addReaction,
+  removeReaction,
 } from '@/flavours/glitch/actions/interactions';
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { initMuteModal } from '@/flavours/glitch/actions/mutes';
@@ -69,16 +71,20 @@ const makeMapStateToProps = () => {
   return mapStateToProps;
 };
 
-const mapDispatchToProps = (dispatch, { contextType }) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
 
   onReply (status) {
+    const getStatus = makeGetStatus();
+
     dispatch((_, getState) => {
       let state = getState();
+      const statusFromState = getStatus(state, ownProps);
+      const rebloggedBy = statusFromState.get('reblog') ? statusFromState.get('account') : undefined;
 
       if (state.getIn(['local_settings', 'confirm_before_clearing_draft']) && state.getIn(['compose', 'text']).trim().length !== 0) {
-        dispatch(openModal({ modalType: 'CONFIRM_REPLY', modalProps: { status } }));
+        dispatch(openModal({ modalType: 'CONFIRM_REPLY', modalProps: { status, rebloggedBy } }));
       } else {
-        dispatch(replyCompose(status));
+        dispatch(replyCompose(status, rebloggedBy));
       }
     });
   },
@@ -109,6 +115,14 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
     } else {
       dispatch(pin(status));
     }
+  },
+
+  onReactionAdd (statusId, name, url) {
+    dispatch(addReaction(statusId, name, url));
+  },
+
+  onReactionRemove (statusId, name) {
+    dispatch(removeReaction(statusId, name));
   },
 
   onEmbed (status) {
@@ -197,6 +211,7 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
   },
 
   onAddFilter (status) {
+    const { contextType } = ownProps;
     dispatch(initAddFilter(status, { contextType }));
   },
 

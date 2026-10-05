@@ -19,7 +19,7 @@ import Card from '@/flavours/glitch/features/status/components/card';
 import Bundle from '@/flavours/glitch/features/ui/components/bundle';
 import { MediaGallery, Video, Audio } from '@/flavours/glitch/features/ui/util/async-components';
 import { SensitiveMediaContext } from '@/flavours/glitch/features/ui/util/sensitive_media_context';
-import { displayMedia } from '@/flavours/glitch/initial_state';
+import { displayMedia, visibleReactions } from '@/flavours/glitch/initial_state';
 import { CollectionPreviewCard } from '@/flavours/glitch/features/collections/components/collection_preview_card';
 import { compareUrls } from '@/flavours/glitch/utils/compare_urls';
 import AttachmentList from '@/flavours/glitch/components/attachment_list';
@@ -34,6 +34,7 @@ import StatusActionBar from './action_bar';
 import StatusContent from './content';
 import StatusIcons from './icons';
 import StatusPrepend from './prepend';
+import { StatusReactions } from './reactions';
 
 const domParser = new DOMParser();
 
@@ -101,6 +102,8 @@ class Status extends ImmutablePureComponent {
     onDelete: PropTypes.func,
     onDirect: PropTypes.func,
     onMention: PropTypes.func,
+    onReactionAdd: PropTypes.func,
+    onReactionRemove: PropTypes.func,
     onPin: PropTypes.func,
     onOpenMedia: PropTypes.func,
     onOpenVideo: PropTypes.func,
@@ -540,7 +543,7 @@ class Status extends ImmutablePureComponent {
           <div className='status__wrapper status__wrapper--filtered focusable' tabIndex={unfocusable ? null : 0} ref={this.handleRef}>
             <FormattedMessage id='status.filtered' defaultMessage='Filtered' />: {matchedFilters.join(', ')}.
             {' '}
-            <button className='status__wrapper--filtered__button' onClick={this.handleUnfilterClick}>
+            <button className='status__wrapper--filtered__button' onClick={this.handleUnfilterClick} type='button'>
               <FormattedMessage id='status.show_filter_reason' defaultMessage='Show anyway' />
             </button>
           </div>
@@ -685,6 +688,7 @@ class Status extends ImmutablePureComponent {
     if (this.props.prepend && account) {
       const notifKind = {
         favourite: 'favourited',
+        reaction: 'reacted',
         reblog: 'boosted',
         reblogged_by: 'boosted',
         status: 'posted',
@@ -768,6 +772,7 @@ class Status extends ImmutablePureComponent {
                   collapsible
                   media={media}
                   onCollapsedToggle={this.handleCollapsedToggle}
+                  zoomEmojisOnHover={settings.get('zoom_emojis_on_hover')}
                   {...statusContentProps}
                 />
 
@@ -780,6 +785,13 @@ class Status extends ImmutablePureComponent {
 
             {/* This is a glitch-soc addition to have a placeholder */}
             {!expanded && <MentionsPlaceholder status={status} />}
+
+            {(showActions && !isQuotedPost) &&
+              <StatusReactions
+                id={status.get('id')}
+                reactions={status.get('reactions').toArray()}
+              />
+            }
 
             {(showActions && !isQuotedPost) &&
               <StatusActionBar
@@ -798,4 +810,4 @@ class Status extends ImmutablePureComponent {
 
 }
 
-export default withOptionalRouter(injectIntl(Status));
+export default withOptionalRouter(injectIntl((Status)));
