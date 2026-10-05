@@ -83,6 +83,7 @@ class StatusContent extends PureComponent {
     onCollapsedToggle: PropTypes.func,
     languages: ImmutablePropTypes.map,
     intl: PropTypes.object,
+    zoomEmojisOnHover: PropTypes.bool.isRequired,
     // from react-router
     match: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
@@ -183,7 +184,7 @@ class StatusContent extends PureComponent {
   }
 
   render () {
-    const { status, intl, statusContent } = this.props;
+    const { status, intl, zoomEmojisOnHover, statusContent } = this.props;
 
     const renderReadMore = this.props.onClick && status.get('collapsed');
     const contentLocale = intl.locale.replace(/[_-].*/, '');
@@ -195,7 +196,12 @@ class StatusContent extends PureComponent {
     const classNames = classnames('status__content', {
       'status__content--with-action': this.props.onClick && this.props.history,
       'status__content--collapsed': renderReadMore,
+      'status__content--zoom-emojis-on-hover': zoomEmojisOnHover,
     });
+    const textClassNames = classnames('status__content__text status__content__text--visible translate', {
+      'status__content--zoom-emojis-on-hover': zoomEmojisOnHover,
+    });
+
 
     const readMoreButton = renderReadMore && (
       <button type='button' className='status__content__read-more-button' onClick={this.props.onClick} key='read-more'>

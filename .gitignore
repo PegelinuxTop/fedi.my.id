@@ -79,3 +79,9 @@ docker-compose.override.yml
 
 *storybook.log
 storybook-static
+
+# Ignore some local files for Urusai
+import_emoji.rb
+log.txt
+public.old/
+.cachebro/

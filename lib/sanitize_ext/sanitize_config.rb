@@ -75,6 +75,15 @@ class Sanitize
       current_node.replace(current_node.document.create_text_node(current_node.text)) unless LINK_PROTOCOLS.include?(scheme)
     end
 
+    UNSUPPORTED_ELEMENTS_TRANSFORMER = lambda do |env|
+      return unless env[:node_name] == 'h6'
+
+      current_node = env[:node]
+
+      current_node.name = 'strong'
+      current_node.wrap('<p></p>')
+    end
+
     # We assume that incomming <math> nodes are of the form
     # <math><semantics>...<annotation>...</annotation></semantics></math>
     # according to the [FEP]. We try to grab the most relevant plain-text
@@ -124,6 +133,7 @@ class Sanitize
         'a' => %w(href rel class title translate),
         'abbr' => %w(title),
         'span' => %w(class translate),
+
         'blockquote' => %w(cite),
         'ol' => %w(start reversed),
         'li' => %w(value),

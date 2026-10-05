@@ -10,12 +10,42 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     dereference_object!
 
     create_status
+  rescue Mastodon::RejectPayload
+    reject_payload!
   end
 
   private
 
+  def create_encrypted_message
+    return reject_payload! if non_matching_uri_hosts?(@account.uri, object_uri) || @options[:delivered_to_account_id].blank?
+
+    target_account = Account.find(@options[:delivered_to_account_id])
+    target_device  = target_account.devices.find_by(device_id: @object.dig('to', 'deviceId'))
+
+    return if target_device.nil?
+
+    target_device.encrypted_messages.create!(
+      from_account: @account,
+      from_device_id: @object.dig('attributedTo', 'deviceId'),
+      type: @object['messageType'],
+      body: @object['cipherText'],
+      digest: @object.dig('digest', 'digestValue'),
+      message_franking: message_franking.to_token
+    )
+  end
+
+  def message_franking
+    MessageFranking.new(
+      hmac: @object.dig('digest', 'digestValue'),
+      original_franking: @object['messageFranking'],
+      source_account_id: @account.id,
+      target_account_id: @options[:delivered_to_account_id],
+      timestamp: Time.now.utc
+    )
+  end
+
   def create_status
-    return reject_payload! if unsupported_object_type? || non_matching_uri_hosts?(@account.uri, object_uri) || tombstone_exists?
+    return reject_payload! if unsupported_object_type? || non_matching_uri_hosts?(@account.uri, object_uri) || tombstone_exists? || reject_pattern?(@object['content'])
 
     @status_parser = ActivityPub::Parser::StatusParser.new(
       @json,
@@ -63,9 +93,16 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     @quote_approval_uri   = nil
 
     process_status_params
+
+    raise Mastodon::RejectPayload if MediaAttachment.where(id: @params[:media_attachment_ids]).where(blurhash: Setting.reject_blurhash.split(/\r?\n/).compact_blank.uniq).present?
+    raise Mastodon::RejectPayload if reject_pattern?(MediaAttachment.where(id: @params[:media_attachment_ids]).pluck(:description).join('\n'))
+
     process_tags
     process_quote
     process_audience
+
+    # Reject the status unless all the hashtags are usable:
+    return reject_payload! unless @tags.all?(&:usable?)
 
     ApplicationRecord.transaction do
       @status = Status.create!(@params.merge(quote: @quote))
@@ -486,6 +523,10 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
 
   def tombstone_exists?
     Tombstone.exists?(uri: object_uri)
+  end
+
+  def reject_pattern?(text)
+    Setting.reject_pattern.present? && text&.match?(Setting.reject_pattern)
   end
 
   def forward_for_reply
