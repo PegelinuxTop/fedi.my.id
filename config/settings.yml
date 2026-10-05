@@ -13,8 +13,10 @@ defaults: &defaults
   profile_directory: true
   closed_registrations_message: ''
   local_live_feed_access: 'authenticated'
+  bubble_live_feed_access: 'authenticated'
   remote_live_feed_access: 'authenticated'
   local_topic_feed_access: 'authenticated'
+  bubble_topic_feed_access: 'authenticated'
   remote_topic_feed_access: 'authenticated'
   show_staff_badge: true
   preview_sensitive_media: false
@@ -25,16 +27,20 @@ defaults: &defaults
   trends: true
   trendable_by_default: false
   trending_status_cw: true
+  visible_reactions: 6
   hide_followers_count: false
   disallowed_hashtags: # space separated string or list of hashtags without the hash
   bootstrap_timeline_accounts: ''
   activity_api_enabled: true
   peers_api_enabled: true
-  show_reblogs_in_public_timelines: false
-  show_replies_in_public_timelines: false
+  show_reblogs_in_local_timelines: false
+  show_replies_in_local_timelines: false
+  show_reblogs_in_federated_timelines: false
+  show_replies_in_federated_timelines: false
   default_content_type: 'text/plain'
   show_domain_blocks: 'disabled'
   show_domain_blocks_rationale: 'disabled'
+  show_bubble_domains: 'users'
   outgoing_spoilers: ''
   require_invite_text: false
   backups_retention_period: 7
@@ -44,6 +50,8 @@ defaults: &defaults
   opt_in_server_directory: false
   opt_in_server_recommendation: false
   wrapstodon: true
+  reject_pattern: ''
+  reject_blurhash: ''
 
 development:
   <<: *defaults

@@ -382,6 +382,16 @@ en:
       unpublish: Unpublish
       unpublished_msg: Announcement successfully unpublished!
       updated_msg: Announcement successfully updated!
+    bubble_domains:
+      add: Add to bubble
+      created_msg: Successfully added domain to bubble
+      delete: Delete
+      description_html: The <strong>bubble timeline</strong> is a public timeline consisting of posts from other servers that you select. <strong>It can help users on your server discover interesting content and new people to talk to</strong> without the noise of the full remote and public timelines.
+      domain: Domain
+      new:
+        save: Save
+        title: Add new bubble domain
+      title: Bubble
     collections:
       accounts: Accounts
       back_to_account: Back to account page
@@ -1034,6 +1044,10 @@ en:
           local_feed: Local live feed
           overview: Overview
           trends: Trending
+      others:
+        activitypub: ActivityPub
+        preamble: Other settings, including customizing behavior
+        title: Other settings
       registrations:
         moderation_recommandation: Please make sure you have an adequate and reactive moderation team before you open registrations to everyone!
         preamble: Control who can create an account on your server.
@@ -1044,6 +1058,12 @@ en:
           none: Nobody can sign up
           open: Anyone can sign up
         warning_hint: We recommend using “Approval required for sign up” unless you are confident your moderation team can handle spam and malicious registrations in a timely fashion.
+      reject_blurhash:
+        desc_html: Blurhashes to compare against Create activities' media attachments. Matching activities will be rejected. Separated by newline.
+        title: Reject blurhash
+      reject_pattern:
+        desc_html: Set a regular expression pattern to inspect Create Activity content, and refuse Activity if you match
+        title: Reject Pattern
       security:
         authorized_fetch: Require authentication from federated servers
         authorized_fetch_hint: Decide when remote servers are required to authenticate when fetching content from this server.
@@ -1417,6 +1437,7 @@ en:
   applications:
     created: Application successfully created
     destroyed: Application successfully deleted
+    invalid_regexp: 'The provided Regexp is invalid: %{message}'
     logout: Logout
     regenerate_token: Regenerate access token
     token_regenerated: Access token successfully regenerated
@@ -1428,6 +1449,7 @@ en:
       help_html: If you have issues solving the CAPTCHA, you can get in touch with us through %{email} and we can assist you.
       hint_html: Just one more thing! We need to confirm you're a human (this is so we can keep the spam out!). Solve the CAPTCHA below and click "Continue".
       title: Security check
+    change_password: Password
     confirmations:
       awaiting_review: Your email address is confirmed! The %{domain} staff is now reviewing your registration. You will receive an email if they approve your account!
       awaiting_review_title: Your registration is being reviewed

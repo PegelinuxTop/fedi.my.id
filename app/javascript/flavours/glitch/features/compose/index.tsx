@@ -14,6 +14,7 @@ import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';
 import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import elephantUIPlane from '@/images/elephant_ui_plane.svg';
+import BubbleChartIcon from '@/material-icons/400-24px/bubble_chart.svg?react';
 import EditIcon from '@/material-icons/400-24px/edit_square.svg?react';
 import PeopleIcon from '@/material-icons/400-24px/group.svg?react';
 import HomeIcon from '@/material-icons/400-24px/home-fill.svg?react';
@@ -40,6 +41,10 @@ const messages = defineMessages({
   live_feed_public: {
     id: 'navigation_bar.live_feed_public',
     defaultMessage: 'Live feed (public)',
+  },
+  live_feed_bubble: {
+    id: 'navigation_bar.live_feed_bubble',
+    defaultMessage: 'Live feed (bubble)',
   },
   live_feed_local: {
     id: 'navigation_bar.live_feed_local',
@@ -179,6 +184,16 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
               aria-label={intl.formatMessage(messages.live_feed_local)}
             >
               <Icon id='users' icon={PeopleIcon} />
+            </Link>
+          )}
+          {!columns.some((column) => column.get('id') === 'BUBBLE') && (
+            <Link
+              to='/public/bubble'
+              className='drawer__tab'
+              title={intl.formatMessage(messages.live_feed_bubble)}
+              aria-label={intl.formatMessage(messages.live_feed_bubble)}
+            >
+              <Icon id='users' icon={BubbleChartIcon} />
             </Link>
           )}
           {!columns.some((column) => column.get('id') === 'PUBLIC') && (
