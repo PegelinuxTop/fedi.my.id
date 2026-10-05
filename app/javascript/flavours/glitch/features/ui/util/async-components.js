@@ -22,6 +22,10 @@ export function CommunityTimeline () {
   return import('../../community_timeline');
 }
 
+export function BubbleTimeline () {
+  return import('../../bubble_timeline');
+}
+
 export function Firehose () {
   return import('../../firehose');
 }
@@ -108,6 +112,10 @@ export function Reblogs () {
 
 export function Favourites () {
   return import('../../favourites');
+}
+
+export function Reactions () {
+  return import('../../reactions');
 }
 
 export function Quotes () {

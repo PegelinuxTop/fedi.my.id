@@ -19,11 +19,11 @@ import {
 } from 'flavours/glitch/actions/notification_requests';
 import { changeSetting } from 'flavours/glitch/actions/settings';
 import { CheckBox } from 'flavours/glitch/components/check_box';
+import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { Icon } from 'flavours/glitch/components/icon';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
-import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
 
 import { NotificationRequest } from './components/notification_request';
 import { PolicyControls } from './components/policy_controls';

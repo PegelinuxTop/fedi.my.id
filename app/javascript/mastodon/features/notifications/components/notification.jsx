@@ -489,10 +489,10 @@ class Notification extends ImmutablePureComponent {
     }
 
     const targetAccount = report.get('target_account');
-    const targetLink = <LinkedDisplayName
+    const targetLink = (<LinkedDisplayName
       className='notification__display-name'
       displayProps={{account:targetAccount, variant: 'simple'}}
-    />;
+    />);
 
     return (
       <Hotkeys handlers={this.getHandlers()}>
