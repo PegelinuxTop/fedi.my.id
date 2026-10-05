@@ -23,6 +23,7 @@ import {
   fillPublicTimelineGaps,
   fillCommunityTimelineGaps,
   fillListTimelineGaps,
+  fillBubbleTimelineGaps,
 } from './timelines';
 
 /**
@@ -181,6 +182,17 @@ export const connectCommunityStream = ({ onlyMedia } = {}) =>
   connectTimelineStream(`community${onlyMedia ? ':media' : ''}`, `public:local${onlyMedia ? ':media' : ''}`, {}, {
     // @ts-expect-error
     fillGaps: () => (fillCommunityTimelineGaps({ onlyMedia }))
+  });
+
+/**
+ * @param {Object} options
+ * @param {boolean} [options.onlyMedia]
+ * @returns {StreamThunk}
+ */
+export const connectBubbleStream = ({ onlyMedia } = {}) =>
+  connectTimelineStream(`bubble${onlyMedia ? ':media' : ''}`, `public:bubble${onlyMedia ? ':media' : ''}`, {}, {
+    // @ts-expect-error
+    fillGaps: () => (fillBubbleTimelineGaps({ onlyMedia }))
   });
 
 /**

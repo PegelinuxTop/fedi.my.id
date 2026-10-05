@@ -77,6 +77,88 @@ RSpec.describe FanOutOnWriteService do
     end
   end
 
+  context 'when the status is a boost' do
+    let(:visibility) { 'public' }
+    let(:boosted) { Fabricate(:status, account: bob, visibility: 'public', text: 'Original') }
+    let(:status) { Fabricate(:status, account: alice, visibility: 'public', reblog: boosted) }
+
+    it 'does not broadcast boosts to the public timelines when they are disabled' do
+      subject.call(status)
+
+      expect(redis).to_not have_received(:publish).with('timeline:public', anything)
+      expect(redis).to_not have_received(:publish).with('timeline:public:local', anything)
+    end
+
+    context 'when boosts are enabled for local timelines' do
+      before { Setting.show_reblogs_in_local_timelines = true }
+
+      it 'broadcasts to the local timeline but not to the mixed public timeline' do
+        subject.call(status)
+
+        expect(redis).to have_received(:publish).with('timeline:public:local', anything)
+        expect(redis).to_not have_received(:publish).with('timeline:public', anything)
+      end
+    end
+
+    context 'when boosts are enabled for federated timelines' do
+      before { Setting.show_reblogs_in_federated_timelines = true }
+
+      it 'broadcasts to the mixed public timeline but not to the local timeline' do
+        subject.call(status)
+
+        expect(redis).to have_received(:publish).with('timeline:public', anything)
+        expect(redis).to_not have_received(:publish).with('timeline:public:local', anything)
+      end
+    end
+  end
+
+  context 'when the status is a reply to another account' do
+    let(:visibility) { 'public' }
+    let(:parent) { Fabricate(:status, account: bob, visibility: 'public') }
+    let(:status) { Fabricate(:status, account: alice, visibility: 'public', text: 'Hello @bob @eve #hoge', in_reply_to_id: parent.id) }
+
+    it 'does not broadcast replies to the public timelines when they are disabled' do
+      subject.call(status)
+
+      expect(redis).to_not have_received(:publish).with('timeline:public', anything)
+      expect(redis).to_not have_received(:publish).with('timeline:public:local', anything)
+      expect(redis).to have_received(:publish).with('timeline:hashtag:hoge', anything)
+    end
+
+    context 'when replies are enabled for local timelines' do
+      before { Setting.show_replies_in_local_timelines = true }
+
+      it 'broadcasts replies to the local timeline' do
+        subject.call(status)
+
+        expect(redis).to have_received(:publish).with('timeline:public:local', anything)
+      end
+    end
+  end
+
+  context 'when the status is a reply to the author themselves' do
+    let(:visibility) { 'public' }
+    let(:parent) { Fabricate(:status, account: alice, visibility: 'public') }
+    let(:status) { Fabricate(:status, account: alice, visibility: 'public', text: 'Hello @bob @eve #hoge', in_reply_to_id: parent.id) }
+
+    it 'broadcasts the reply even when replies are disabled' do
+      subject.call(status)
+
+      expect(redis).to have_received(:publish).with('timeline:public:local', anything)
+    end
+  end
+
+  describe 'the timeline boost and reply settings' do
+    let(:visibility) { 'public' }
+
+    it 'defaults to hiding boosts and replies in every public timeline' do
+      expect(Setting.show_reblogs_in_local_timelines).to be(false)
+      expect(Setting.show_replies_in_local_timelines).to be(false)
+      expect(Setting.show_reblogs_in_federated_timelines).to be(false)
+      expect(Setting.show_replies_in_federated_timelines).to be(false)
+    end
+  end
+
   context 'when status is limited' do
     let(:visibility) { 'limited' }
 
