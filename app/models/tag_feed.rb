@@ -10,6 +10,7 @@ class TagFeed < PublicFeed
   # @option [Enumerable<String>] :all
   # @option [Enumerable<String>] :none
   # @option [Boolean] :local
+  # @option [Boolean] :bubble
   # @option [Boolean] :remote
   # @option [Boolean] :only_media
   def initialize(tag, account, options = {})
@@ -32,6 +33,7 @@ class TagFeed < PublicFeed
     scope.merge!(tagged_with_all_scope)
     scope.merge!(tagged_with_none_scope)
     scope.merge!(local_only_scope) if local_only?
+    scope.merge!(bubble_only_scope) if bubble_only?
     scope.merge!(remote_only_scope) if remote_only?
     scope.merge!(account_filters_scope) if account?
     scope.merge!(media_only_scope) if media_only?
@@ -43,6 +45,10 @@ class TagFeed < PublicFeed
 
   def local_feed_setting
     Setting.local_topic_feed_access
+  end
+
+  def bubble_feed_setting
+    Setting.bubble_topic_feed_access
   end
 
   def remote_feed_setting
