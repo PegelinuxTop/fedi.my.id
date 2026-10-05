@@ -31,6 +31,7 @@ require_relative '../lib/paperclip/gif_transcoder'
 require_relative '../lib/paperclip/transcoder'
 require_relative '../lib/paperclip/type_corrector'
 require_relative '../lib/paperclip/response_with_limit_adapter'
+require_relative '../lib/paperclip/qr_decoder'
 require_relative '../lib/terrapin/multi_pipe_extensions'
 require_relative '../lib/mastodon/middleware/public_file_server'
 require_relative '../lib/mastodon/middleware/socket_cleanup'
@@ -103,6 +104,7 @@ module Mastodon
     config.x.mastodon = config_for(:mastodon)
     config.x.omniauth = config_for(:omniauth)
     config.x.translation = config_for(:translation)
+    config.x.gifs = config_for(:gifs)
     config.x.vapid = config_for(:vapid)
 
     if ENV.fetch('QUERY_LOG_TAGS_ENABLED', 'false') == 'true'
