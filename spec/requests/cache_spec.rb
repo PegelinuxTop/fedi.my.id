@@ -582,7 +582,16 @@ RSpec.describe 'Caching behavior' do
         describe endpoint do
           before { get endpoint }
 
-          it_behaves_like 'non-cacheable error'
+          if endpoint == '/api/v1/custom_emojis'
+            # The fork answers this endpoint without authentication even in this
+            # mode: Api::V1::CustomEmojisController skips
+            # `require_authenticated_user!` unless the instance is in
+            # limited-federation mode (README deviation 11), so it succeeds
+            # instead of erroring, and still must not be publicly cached.
+            it_behaves_like 'non-cacheable response', http_success: true
+          else
+            it_behaves_like 'non-cacheable error'
+          end
         end
       end
     end

@@ -28,6 +28,11 @@ export const LinkFooter: React.FC<{
       <section>
         <h2 className={classes.heading}>{`${domain}:`}</h2>
         <ul className={classes.list}>
+          <li>
+            New to Mastodon and want an easier transition? Try the{' '}
+            <a href='https://elk.urusai.social/'>Alternative UI (Elk)</a> for a
+            more &quot;bird-like&quot; interface!
+          </li>
           {context !== 'about' && (
             <li>
               <Link to='/about' target={multiColumn ? '_blank' : undefined}>
