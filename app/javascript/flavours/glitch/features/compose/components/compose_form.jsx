@@ -10,11 +10,10 @@ import { ImmutablePureComponent } from 'react-immutable-pure-component';
 
 import { length } from 'stringz';
 
-import { missingAltTextModal } from 'flavours/glitch/initial_state';
-
 import AutosuggestInput from 'flavours/glitch/components/autosuggest_input';
 import AutosuggestTextarea from 'flavours/glitch/components/autosuggest_textarea';
 import { Button } from 'flavours/glitch/components/button';
+import { missingAltTextModal } from 'flavours/glitch/initial_state';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import EmojiPickerDropdown from '../containers/emoji_picker_dropdown_container';
 import PollButtonContainer from '../containers/poll_button_container';
@@ -29,13 +28,13 @@ import { FederationButton } from './federation_button';
 import { LanguageDropdown } from './language_dropdown';
 import { NavigationBar } from './navigation_bar';
 import { PollForm } from "./poll_form";
+import { ComposeQuotedStatus } from './quoted_post';
 import { ReplyIndicator } from './reply_indicator';
 import { SecondaryPrivacyButton } from './secondary_privacy_button';
 import { ThreadModeButton } from './thread_mode_button';
 import { UploadForm } from './upload_form';
-import { Warning } from './warning';
-import { ComposeQuotedStatus } from './quoted_post';
 import { VisibilityButton } from './visibility_button';
+import { Warning } from './warning';
 
 const allowedAroundShortCode = '><\u0085\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028\u2029\u0009\u000a\u000b\u000c\u000d';
 

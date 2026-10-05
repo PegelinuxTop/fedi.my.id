@@ -1505,12 +1505,18 @@ a.sparkline {
     &__key {
       font-weight: 500;
       padding: 11px 10px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     &__value {
       text-align: end;
       color: var(--color-text-secondary);
       padding: 11px 10px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     &__indicator {

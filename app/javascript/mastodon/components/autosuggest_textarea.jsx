@@ -236,8 +236,10 @@ AutosuggestTextarea.propTypes = {
   onKeyDown: PropTypes.func,
   onPaste: PropTypes.func.isRequired,
   onDrop: PropTypes.func,
-  onFocus:PropTypes.func,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
   autoFocus: PropTypes.bool,
+  className: PropTypes.string,
   lang: PropTypes.string,
 };
 

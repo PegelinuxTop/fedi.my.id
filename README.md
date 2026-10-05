@@ -1,13 +1,24 @@
-# Mastodon Glitch Edition
+# Mastodon Glitch+Urusai Edition
 
-[![Ruby Testing](https://github.com/glitch-soc/mastodon/actions/workflows/test-ruby.yml/badge.svg)](https://github.com/glitch-soc/mastodon/actions/workflows/test-ruby.yml)
-[![Crowdin](https://badges.crowdin.net/glitch-soc/localized.svg)][glitch-crowdin]
+This is the repo for the fork of Mastodon used by [Urusai! Social](https://urusai.social/).
 
-[glitch-crowdin]: https://crowdin.com/project/glitch-soc
+Added features:
+
+- Flavours/styles from @chikorita157@sakurajima.moe
+- Emoji enhancements
+  - Enlarge emoji in post content on mouse-over/tap
+- Collapsed post improvements
+  - show > 1 line for better visual parsing
+  - ~~customize height of posts to trigger lengthy toot collapse, etc)~~ (Implemented upstream!)
+- ~~Option to merge boosts and favorites into a single notification for the same status~~ (Implemented upstream!)
+- Emoji reactions!
+- Quote posts
+- Gif picker
+- Other minor fixes/improvements
 
 So here's the deal: we all work on this code, and anyone who uses that does so absolutely at their own risk. can you dig it?
 
-- You can view documentation for this project at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/).
+- You can view documentation for the original glitch-soc project at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/).
 - And contributing guidelines are available [here](CONTRIBUTING.md) and [here](https://glitch-soc.github.io/docs/contributing/).
 
 Mastodon Glitch Edition is a fork of [Mastodon](https://github.com/mastodon/mastodon). Upstream's README file is reproduced below.

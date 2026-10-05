@@ -604,6 +604,28 @@ RSpec.describe Account::Interactions do
     end
   end
 
+  describe '#reacted?' do
+    subject { account.reacted?(status, '👍') }
+
+    let(:status) { Fabricate(:status, account: account, status_reactions: reactions) }
+
+    context 'when reacted' do
+      let(:reactions) { [Fabricate(:status_reaction, account: account)] }
+
+      it 'returns true' do
+        expect(subject).to be true
+      end
+    end
+
+    context 'when not reacted' do
+      let(:reactions) { [] }
+
+      it 'returns false' do
+        expect(subject).to be false
+      end
+    end
+  end
+
   describe '#reblogged?' do
     subject { account.reblogged?(status) }
 

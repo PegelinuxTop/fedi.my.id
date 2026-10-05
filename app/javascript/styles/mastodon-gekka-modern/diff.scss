@@ -1,0 +1,65 @@
+// Gekka Modern theme - simplified diff focusing on CSS token usage
+// Most styling is now handled by the theme tokens defined in theme/
+
+// Custom overrides specific to Gekka theme can go here
+.button.button-tertiary {
+  border: 1px solid var(--color-text-brand) !important;
+  color: var(--color-text-brand) !important;
+}
+
+.pillbar-button {
+  background: var(--color-bg-secondary-solid);
+
+  &:not([disabled]) {
+    &:hover,
+    &:focus {
+      background: var(--color-bg-tertiary);
+    }
+
+    &.active {
+      background-color: var(--color-bg-brand-base);
+      color: var(--color-text-on-brand-base);
+
+      &:hover,
+      &:focus {
+        background: var(--color-bg-brand-base-hover);
+      }
+    }
+  }
+}
+
+.glitch.local-settings {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+}
+
+.glitch.local-settings__navigation {
+  background: var(--color-bg-secondary-solid);
+}
+
+.glitch.local-settings__navigation__item {
+  background: var(--color-bg-secondary-solid);
+  border-bottom: 1px solid var(--color-border-primary);
+
+  &:hover {
+    background: var(--color-bg-primary);
+  }
+
+  &.active {
+    background: var(--color-bg-brand-base);
+    color: var(--color-text-on-brand-base);
+  }
+
+  &.close,
+  &.close:hover {
+    background: var(--color-bg-error-base);
+    color: var(--color-text-on-error-base);
+  }
+}
+
+.status.collapsed .status__content::after {
+  background: linear-gradient(
+    rgba(var(--color-bg-secondary-base), 0%),
+    rgba(var(--color-bg-secondary-base), 1%)
+  );
+}

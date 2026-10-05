@@ -8,6 +8,8 @@ $doodle-background: #d9e1e8;
   background: $doodle-background;
   text-align: center;
   line-height: 0; // remove weird gap under canvas
+  overflow: auto;
+
   canvas {
     border: 5px solid $doodle-background;
   }

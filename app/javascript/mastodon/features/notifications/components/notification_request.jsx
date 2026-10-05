@@ -8,6 +8,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
+import { DisplayName } from '@/mastodon/components/display_name';
 import DeleteIcon from '@/material-icons/400-24px/delete.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
 import { initBlockModal } from 'mastodon/actions/blocks';
@@ -16,9 +17,8 @@ import { acceptNotificationRequest, dismissNotificationRequest } from 'mastodon/
 import { initReport } from 'mastodon/actions/reports';
 import { Avatar } from 'mastodon/components/avatar';
 import { CheckBox } from 'mastodon/components/check_box';
-import { DisplayName } from '@/mastodon/components/display_name';
-import { IconButton } from 'mastodon/components/icon_button';
 import { Dropdown } from 'mastodon/components/dropdown_menu';
+import { IconButton } from 'mastodon/components/icon_button';
 import { makeGetAccount } from 'mastodon/selectors';
 import { toCappedNumber } from 'mastodon/utils/numbers';
 

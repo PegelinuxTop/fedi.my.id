@@ -57,6 +57,14 @@ class LocalSettingsPage extends PureComponent {
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
+          item={['zoom_emojis_on_hover']}
+          id='mastodon-settings--zoom-on-hover'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.zoom_emojis_on_hover' defaultMessage='Zoom in on emojis when hovering over them' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
           item={['hicolor_privacy_icons']}
           id='mastodon-settings--hicolor_privacy_icons'
           onChange={onChange}
@@ -192,6 +200,14 @@ class LocalSettingsPage extends PureComponent {
           onChange={onChange}
         >
           <FormattedMessage id='settings.always_show_spoilers_field' defaultMessage='Always enable the Content Warning field' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['mention_reblogger']}
+          id='mastodon-settings--mention_reblogger'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.mention_reblogger' defaultMessage='Mention booster when replying to a boosted post' />
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}

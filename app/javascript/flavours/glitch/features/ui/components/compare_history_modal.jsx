@@ -8,14 +8,14 @@ import { connect } from 'react-redux';
 
 import escapeTextContentForBrowser from 'escape-html';
 
+import { CustomEmojiProvider } from '@/flavours/glitch/components/emoji/context';
+import { EmojiHTML } from '@/flavours/glitch/components/emoji/html';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { closeModal } from 'flavours/glitch/actions/modal';
 import { IconButton } from 'flavours/glitch/components/icon_button';
 import InlineAccount from 'flavours/glitch/components/inline_account';
 import MediaAttachments from 'flavours/glitch/components/media_attachments';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
-import { EmojiHTML } from '@/flavours/glitch/components/emoji/html';
-import { CustomEmojiProvider } from '@/flavours/glitch/components/emoji/context';
 
 const mapStateToProps = (state, { statusId }) => ({
   language: state.getIn(['statuses', statusId, 'language']),

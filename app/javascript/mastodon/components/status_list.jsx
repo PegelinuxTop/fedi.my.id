@@ -16,7 +16,6 @@ import { Status } from './status';
 import { LoadGap } from './load_gap';
 import ScrollableList from './scrollable_list';
 
-
 export default class StatusList extends ImmutablePureComponent {
 
   static propTypes = {
