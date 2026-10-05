@@ -46,7 +46,9 @@ class HashtagTimeline extends PureComponent {
     columnId: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     hasUnread: PropTypes.bool,
+    hasFeedAccess: PropTypes.bool,
     multiColumn: PropTypes.bool,
+    local: PropTypes.bool,
   };
 
   handlePin = () => {
