@@ -33,6 +33,7 @@ export default class PillBarButton extends PureComponent {
         className={classNames('pillbar-button', { active })}
         disabled={disabled}
         onClick={this.onChange}
+        type='button'
         aria-pressed={active}
       >
         {label}
