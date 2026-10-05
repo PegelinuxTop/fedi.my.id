@@ -343,6 +343,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_25_094651) do
     t.index ["status_id"], name: "index_bookmarks_on_status_id"
   end
 
+  create_table "bubble_domains", force: :cascade do |t|
+    t.string "domain", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_bubble_domains_on_domain", unique: true
+  end
+
   create_table "bulk_import_rows", force: :cascade do |t|
     t.bigint "bulk_import_id", null: false
     t.datetime "created_at", null: false
@@ -1237,10 +1244,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_25_094651) do
     t.index ["status_id"], name: "index_status_pins_on_status_id"
   end
 
+  create_table "status_reactions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "status_id", null: false
+    t.string "name", default: "", null: false
+    t.bigint "custom_emoji_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "status_id", "name"], name: "index_status_reactions_on_account_id_and_status_id", unique: true
+    t.index ["custom_emoji_id"], name: "index_status_reactions_on_custom_emoji_id"
+    t.index ["status_id"], name: "index_status_reactions_on_status_id"
+  end
+
   create_table "status_stats", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.bigint "favourites_count", default: 0, null: false
     t.bigint "quotes_count", default: 0, null: false
+    t.bigint "reactions_count", default: 0, null: false
     t.bigint "reblogs_count", default: 0, null: false
     t.bigint "replies_count", default: 0, null: false
     t.bigint "status_id", null: false
@@ -1637,6 +1657,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_25_094651) do
   add_foreign_key "status_edits", "statuses", on_delete: :cascade
   add_foreign_key "status_pins", "accounts", name: "fk_d4cb435b62", on_delete: :cascade
   add_foreign_key "status_pins", "statuses", on_delete: :cascade
+  add_foreign_key "status_reactions", "accounts", on_delete: :cascade
+  add_foreign_key "status_reactions", "custom_emojis", on_delete: :cascade
+  add_foreign_key "status_reactions", "statuses", on_delete: :cascade
   add_foreign_key "status_stats", "statuses", on_delete: :cascade
   add_foreign_key "status_trends", "accounts", on_delete: :cascade
   add_foreign_key "status_trends", "statuses", on_delete: :cascade

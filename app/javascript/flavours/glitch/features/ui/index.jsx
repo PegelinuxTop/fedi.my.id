@@ -55,6 +55,7 @@ import {
   HomeTimeline,
   Followers,
   Following,
+  Reactions,
   Reblogs,
   Favourites,
   DirectTimeline,
@@ -232,6 +233,7 @@ class SwitchingColumnsArea extends PureComponent {
             <Redirect from='/timelines/public/local' to={redirectWithoutFocusing('/public/local')} exact />
             <WrappedRoute path='/public' exact component={Firehose} componentParams={{ feedType: 'public' }} content={children} />
             <WrappedRoute path='/public/local' exact component={Firehose} componentParams={{ feedType: 'community' }} content={children} />
+            <WrappedRoute path='/public/bubble' exact component={Firehose} componentParams={{ feedType: 'bubble' }} content={children} />
             <WrappedRoute path='/public/remote' exact component={Firehose} componentParams={{ feedType: 'public:remote' }} content={children} />
             <WrappedRoute path={['/conversations', '/timelines/direct']} component={DirectTimeline} content={children} />
             <WrappedRoute path='/tags/:id' component={HashtagTimeline} content={children} />
@@ -268,6 +270,7 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path={['/accounts/:id/following', '/users/:acct/following', '/@:acct/following']} component={Following} content={children} />
             <WrappedRoute path={['/@:acct/media', '/accounts/:id/media']} component={AccountGallery} content={children} />
             <WrappedRoute path='/@:acct/:statusId' exact component={Status} content={children} />
+            <WrappedRoute path='/@:acct/:statusId/reactions' component={Reactions} content={children} />
             <WrappedRoute path='/@:acct/:statusId/reblogs' component={Reblogs} content={children} />
             <WrappedRoute path='/@:acct/:statusId/favourites' component={Favourites} content={children} />
             <WrappedRoute path='/@:acct/:statusId/quotes' component={Quotes} content={children} />

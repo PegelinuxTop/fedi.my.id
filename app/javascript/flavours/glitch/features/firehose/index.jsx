@@ -10,13 +10,13 @@ import { useIdentity } from '@/flavours/glitch/identity_context';
 import PublicIcon from '@/material-icons/400-24px/public.svg?react';
 import { addColumn } from 'flavours/glitch/actions/columns';
 import { changeSetting } from 'flavours/glitch/actions/settings';
-import { connectPublicStream, connectCommunityStream } from 'flavours/glitch/actions/streaming';
-import { expandPublicTimeline, expandCommunityTimeline } from 'flavours/glitch/actions/timelines';
+import { connectPublicStream, connectCommunityStream, connectBubbleStream } from 'flavours/glitch/actions/streaming';
+import { expandPublicTimeline, expandCommunityTimeline, expandBubbleTimeline } from 'flavours/glitch/actions/timelines';
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { DismissableBanner } from 'flavours/glitch/components/dismissable_banner';
 import SettingText from 'flavours/glitch/components/setting_text';
-import { localLiveFeedAccess, remoteLiveFeedAccess, domain } from 'flavours/glitch/initial_state';
+import { localLiveFeedAccess, bubbleLiveFeedAccess, remoteLiveFeedAccess, domain } from 'flavours/glitch/initial_state';
 import { canViewFeed } from 'flavours/glitch/permissions';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
@@ -106,6 +106,9 @@ const Firehose = ({ feedType, multiColumn }) => {
       case 'public':
         dispatch(addColumn('PUBLIC', { other: { onlyMedia, allowLocalOnly }, regex: { body: regex }  }));
         break;
+      case 'bubble':
+        dispatch(addColumn('BUBBLE', { other: { onlyMedia }, regex: { body: regex } }));
+        break;
       case 'public:remote':
         dispatch(addColumn('REMOTE', { other: { onlyMedia, onlyRemote: true }, regex: { body: regex }  }));
         break;
@@ -119,6 +122,9 @@ const Firehose = ({ feedType, multiColumn }) => {
       switch(feedType) {
       case 'community':
         dispatch(expandCommunityTimeline({ maxId, onlyMedia }));
+        break;
+      case 'bubble':
+        dispatch(expandBubbleTimeline({ maxId, onlyMedia }));
         break;
       case 'public':
         dispatch(expandPublicTimeline({ maxId, onlyMedia, allowLocalOnly }));
@@ -141,6 +147,12 @@ const Firehose = ({ feedType, multiColumn }) => {
         disconnect = dispatch(connectCommunityStream({ onlyMedia }));
       }
       break;
+    case 'bubble':
+      dispatch(expandBubbleTimeline({ onlyMedia }));
+      if (signedIn) {
+        disconnect = dispatch(connectBubbleStream({ onlyMedia }));
+      }
+      break;
     case 'public':
       dispatch(expandPublicTimeline({ onlyMedia, allowLocalOnly }));
       if (signedIn) {
@@ -158,37 +170,60 @@ const Firehose = ({ feedType, multiColumn }) => {
     return () => disconnect?.();
   }, [dispatch, signedIn, feedType, onlyMedia, allowLocalOnly]);
 
-  const prependBanner = feedType === 'community' ? (
-    <DismissableBanner id='community_timeline'>
-      <FormattedMessage
-        id='dismissable_banner.community_timeline'
-        defaultMessage='These are the most recent public posts from people whose accounts are hosted by {domain}.'
-        values={{ domain }}
-      />
-    </DismissableBanner>
-  ) : (
-    <DismissableBanner id='public_timeline'>
-      <FormattedMessage
-        id='dismissable_banner.public_timeline'
-        defaultMessage='These are the most recent public posts from people on the fediverse that people on {domain} follow.'
-        values={{ domain }}
-      />
-    </DismissableBanner>
-  );
+  let prependBanner;
+  let emptyMessage;
 
-  const emptyMessage = feedType === 'community' ? (
-    <FormattedMessage
-      id='empty_column.community'
-      defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!'
-    />
-  ) : (
-    <FormattedMessage
-      id='empty_column.public'
-      defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up'
-    />
-  );
+  if (feedType === 'community') {
+    prependBanner = (
+      <DismissableBanner id='community_timeline'>
+        <FormattedMessage
+          id='dismissable_banner.community_timeline'
+          defaultMessage='These are the most recent public posts from people whose accounts are hosted by {domain}.'
+          values={{ domain }}
+        />
+      </DismissableBanner>
+    );
+    emptyMessage = (
+      <FormattedMessage
+        id='empty_column.community'
+        defaultMessage='The local timeline is empty. Write something publicly to get the ball rolling!'
+      />
+    );
+  } else if (feedType === 'bubble') {
+    prependBanner = (
+      <DismissableBanner id='bubble_timeline'>
+        <FormattedMessage
+          id='dismissable_banner.bubble_timeline'
+          defaultMessage='These are the most recent public posts from people on the fediverse whose accounts are on other servers selected by {domain}.'
+          values={{ domain }}
+        />
+      </DismissableBanner>
+    );
+    emptyMessage = (
+      <FormattedMessage
+        id='empty_column.bubble'
+        defaultMessage='The bubble timeline is currently empty, but something might show up here soon!'
+      />
+    );
+  } else {
+    prependBanner = (
+      <DismissableBanner id='public_timeline'>
+        <FormattedMessage
+          id='dismissable_banner.public_timeline'
+          defaultMessage='These are the most recent public posts from people on the fediverse that people on {domain} follow.'
+          values={{ domain }}
+        />
+      </DismissableBanner>
+    );
+    emptyMessage = (
+      <FormattedMessage
+        id='empty_column.public'
+        defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up'
+      />
+    );
+  }
 
-  const canViewSelectedFeed = canViewFeed(signedIn, permissions, feedType === 'community' ? localLiveFeedAccess : remoteLiveFeedAccess);
+  const canViewSelectedFeed = canViewFeed(signedIn, permissions, feedType === 'community' ? localLiveFeedAccess : feedType === 'bubble' ? bubbleLiveFeedAccess : remoteLiveFeedAccess);
 
   const disabledTimelineMessage = (
     <FormattedMessage
@@ -198,10 +233,12 @@ const Firehose = ({ feedType, multiColumn }) => {
   );
 
   const canViewLocalFeed = canViewFeed(signedIn, permissions, localLiveFeedAccess);
+  const canViewBubbleFeed = canViewFeed(signedIn, permissions, bubbleLiveFeedAccess);
   const canViewRemoteFeed = canViewFeed(signedIn, permissions, remoteLiveFeedAccess);
 
   let title;
-  if (canViewLocalFeed && canViewRemoteFeed) {
+
+  if ((canViewLocalFeed + canViewBubbleFeed + canViewRemoteFeed) > 1) {
     title = messages.title;
   } else if (canViewLocalFeed) {
     title = messages.title_local;
@@ -210,7 +247,7 @@ const Firehose = ({ feedType, multiColumn }) => {
   }
 
   if (isRedesignEnabled()) {
-    const canOnlyViewSingleFeed = canViewLocalFeed !== canViewRemoteFeed;
+    const canOnlyViewSingleFeed = (canViewLocalFeed + canViewBubbleFeed + canViewRemoteFeed) === 1;
 
     title = canOnlyViewSingleFeed
       ? intl.formatMessage(messages.title_singular_redesign)
@@ -244,19 +281,31 @@ const Firehose = ({ feedType, multiColumn }) => {
         </LegacyColumnHeader>
       )}
 
-      {(canViewFeed(signedIn, permissions, localLiveFeedAccess) && canViewFeed(signedIn, permissions, remoteLiveFeedAccess)) && (
+      {((canViewFeed(signedIn, permissions, localLiveFeedAccess) + canViewFeed(signedIn, permissions, bubbleLiveFeedAccess) + canViewFeed(signedIn, permissions, remoteLiveFeedAccess)) > 1) && (
         <div className='account__section-headline'>
-          <NavLink exact to='/public/local'>
-            <FormattedMessage tagName='div' id='firehose.local' defaultMessage='This server' />
-          </NavLink>
+          {(signedIn || localLiveFeedAccess === 'public') && (
+            <NavLink exact to='/public/local'>
+              <FormattedMessage tagName='div' id='firehose.local' defaultMessage='This server' />
+            </NavLink>
+          )}
 
-          <NavLink exact to='/public/remote'>
-            <FormattedMessage tagName='div' id='firehose.remote' defaultMessage='Other servers' />
-          </NavLink>
+          {(signedIn || bubbleLiveFeedAccess === 'public') && (
+            <NavLink exact to='/public/bubble'>
+              <FormattedMessage tagName='div' id='firehose.bubble' defaultMessage='Bubble servers' />
+            </NavLink>
+          )}
 
-          <NavLink exact to='/public'>
-            <FormattedMessage tagName='div' id='firehose.all' defaultMessage='All' />
-          </NavLink>
+          {(signedIn || remoteLiveFeedAccess === 'public') && (
+            <NavLink exact to='/public/remote'>
+              <FormattedMessage tagName='div' id='firehose.remote' defaultMessage='Other servers' />
+            </NavLink>
+          )}
+
+          {(signedIn || (localLiveFeedAccess === 'public' && bubbleLiveFeedAccess === 'public' && remoteLiveFeedAccess === 'public')) && (
+            <NavLink exact to='/public'>
+              <FormattedMessage tagName='div' id='firehose.all' defaultMessage='All' />
+            </NavLink>
+          )}
         </div>
       )}
 

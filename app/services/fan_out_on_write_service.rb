@@ -146,15 +146,36 @@ class FanOutOnWriteService < BaseService
   end
 
   def broadcast_to_public_streams!
-    return if @status.reply? && @status.in_reply_to_account_id != @account.id && !Setting.show_replies_in_public_timelines
-
-    redis.publish('timeline:public', anonymous_payload)
-    redis.publish(@status.local? ? 'timeline:public:local' : 'timeline:public:remote', anonymous_payload)
-
-    if @status.with_media?
-      redis.publish('timeline:public:media', anonymous_payload)
-      redis.publish(@status.local? ? 'timeline:public:local:media' : 'timeline:public:remote:media', anonymous_payload)
+    if @status.local?
+      broadcast_to_public_stream('timeline:public:local', :local)
+    else
+      broadcast_to_public_stream('timeline:public:remote', :federated)
     end
+    broadcast_to_public_stream('timeline:public', :federated)
+    broadcast_to_public_stream('timeline:public:bubble', :federated) if @status.bubble?
+
+    return unless @status.with_media?
+
+    broadcast_to_public_stream('timeline:public:media', :federated)
+    if @status.local?
+      broadcast_to_public_stream('timeline:public:local:media', :local)
+    else
+      broadcast_to_public_stream('timeline:public:remote:media', :federated)
+    end
+    broadcast_to_public_stream('timeline:public:bubble:media', :federated) if @status.bubble?
+  end
+
+  # The fork splits the "show boosts/replies in public timelines" settings into
+  # a local and a federated pair, so each public timeline is filtered on its own.
+  def broadcast_to_public_stream(channel, timelines)
+    return if @status.reblog? && !Setting.public_send(:"show_reblogs_in_#{timelines}_timelines")
+    return if non_self_reply? && !Setting.public_send(:"show_replies_in_#{timelines}_timelines")
+
+    redis.publish(channel, anonymous_payload)
+  end
+
+  def non_self_reply?
+    @status.reply? && @status.in_reply_to_account_id != @account.id
   end
 
   def deliver_to_conversation!
@@ -180,8 +201,10 @@ class FanOutOnWriteService < BaseService
     @options[:update]
   end
 
+  # Public statuses are fanned out to the public streams; the per-timeline
+  # boost/reply settings are applied per channel in broadcast_to_public_streams!.
   def broadcastable?
-    @status.public_visibility? && !@account.silenced? && (!@status.reblog? || Setting.show_reblogs_in_public_timelines)
+    @status.public_visibility? && !@account.silenced?
   end
 
   def subscribed_to_streaming_api?(account_id)
