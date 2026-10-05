@@ -60,6 +60,7 @@ export default class LocalSettingsPage extends PureComponent {
         onClick={handleClick}
         className={finalClassName}
         title={title}
+        type='button'
         aria-label={title}
       >
         {iconElem} <span>{title}</span>
