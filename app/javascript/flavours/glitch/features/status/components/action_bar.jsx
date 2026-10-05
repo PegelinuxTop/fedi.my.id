@@ -14,7 +14,8 @@ import { accountAdminLink, statusAdminLink } from 'flavours/glitch/utils/backend
 
 import { IconButton } from '@/flavours/glitch/components/icon_button';
 import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
-import { me, quickBoosting } from '@/flavours/glitch/initial_state';
+import { me, maxReactions, quickBoosting } from '@/flavours/glitch/initial_state';
+import EmojiPickerDropdown from '../../compose/containers/emoji_picker_dropdown_container';
 import { BoostButton } from '@/flavours/glitch/components/status/legacy/boost_button';
 import { quoteItemState } from '@/flavours/glitch/components/status/boost_button_utils';
 import { selectStatusConditions } from '@/flavours/glitch/selectors/statuses';
@@ -36,6 +37,7 @@ const baseMessages = defineMessages({
   mention: { id: 'status.mention', defaultMessage: 'Mention @{name}' },
   reply: { id: 'status.reply', defaultMessage: 'Reply' },
   favourite: { id: 'status.favourite', defaultMessage: 'Favorite' },
+  react: { id: 'status.react', defaultMessage: 'React' },
   removeFavourite: { id: 'status.remove_favourite', defaultMessage: 'Remove from favorites' },
   bookmark: { id: 'status.bookmark', defaultMessage: 'Bookmark' },
   removeBookmark: { id: 'status.remove_bookmark', defaultMessage: 'Remove bookmark' },
@@ -84,9 +86,11 @@ class ActionBar extends PureComponent {
     onReply: PropTypes.func.isRequired,
     onReblog: PropTypes.func.isRequired,
     onFavourite: PropTypes.func.isRequired,
+    onReactionAdd: PropTypes.func.isRequired,
     onBookmark: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     onRevokeQuote: PropTypes.func,
+    onQuote: PropTypes.func,
     onQuotePolicyChange: PropTypes.func,
     onEdit: PropTypes.func.isRequired,
     onDirect: PropTypes.func.isRequired,
@@ -110,6 +114,10 @@ class ActionBar extends PureComponent {
 
   handleFavouriteClick = (e) => {
     this.props.onFavourite(this.props.status, e);
+  };
+
+  handleEmojiPick = data => {
+    this.props.onReactionAdd(this.props.status.get('id'), data.native.replace(/:/g, ''), data.imageUrl);
   };
 
   handleBookmarkClick = (e) => {
@@ -182,6 +190,8 @@ class ActionBar extends PureComponent {
     const url = this.props.status.get('url');
     navigator.clipboard.writeText(url);
   };
+
+  handleNoOp = () => {}; // hack for reaction add button
 
   render () {
     const { status, statusQuoteState, quotedAccountId, intl } = this.props;
@@ -285,6 +295,8 @@ class ActionBar extends PureComponent {
       replyIconComponent = StatusReplyAllIcon;
     }
 
+    const canReact = signedIn && status.get('reactions').filter(r => r.get('count') > 0 && r.get('me')).size < maxReactions;
+
     const bookmarkTitle = intl.formatMessage(status.get('bookmarked') ? messages.removeBookmark : messages.bookmark);
     const favouriteTitle = intl.formatMessage(status.get('favourited') ? messages.removeFavourite : messages.favourite);
 
@@ -298,6 +310,9 @@ class ActionBar extends PureComponent {
         </div>
         <div className='detailed-status__button'>
           <IconButton className='star-icon' animate active={status.get('favourited')} title={favouriteTitle} icon='star' iconComponent={status.get('favourited') ? StatusLikeActiveIcon : StatusLikeIcon} onClick={this.handleFavouriteClick} />
+        </div>
+        <div className='detailed-status__button'>
+          <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} react disabled={!canReact} />
         </div>
         <div className='detailed-status__button'>
           <IconButton className='bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={bookmarkTitle} icon='bookmark' iconComponent={status.get('bookmarked') ? StatusBookmarkActiveIcon : StatusBookmarkIcon} onClick={this.handleBookmarkClick} />
