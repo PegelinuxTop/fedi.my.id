@@ -448,7 +448,7 @@ body.app-body {
   background-color: var(--color-accent);
   opacity: 0.7;
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   :root:has(.app-body) *::-webkit-scrollbar {
     display: none;
   }
@@ -720,13 +720,13 @@ body.app-body {
     border-left: 0;
   }
 }
-@media screen and (width >=1175px) {
+@media screen and (width >= 1175px) {
   .app-body .columns-area__panels__main {
     max-width: 580px;
     padding: 0;
   }
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body .columns-area__panels {
     gap: 0;
   }
@@ -1415,7 +1415,7 @@ body.app-body {
   background-image: var(--icon-edited-accent);
 }
 
-@media screen and (width >=1173px) {
+@media screen and (width >= 1173px) {
   .app-body .navigation-panel .column-link .icon-home {
     background-image: var(--icon-home-accent);
   }
@@ -1980,7 +1980,7 @@ body.app-body {
   :hover {
   background-color: rgba(0, 0, 0, 40%);
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body:not(.layout-multiple-columns) .compose-form {
     padding: 15px;
   }
@@ -2899,7 +2899,7 @@ body.app-body {
 .app-body .dismissable-banner + article .status::before {
   display: none;
 }
-@media screen and (width >=890px) and (width <=1174px) {
+@media screen and (width >= 890px) and (width <= 1174px) {
   /* no divider above first post in a column thread on medium-size devices */
   .app-body
     .scrollable
@@ -3043,7 +3043,7 @@ div[tabindex='-1']
 
   background-color: var(--color-post-bg);
 }
-@media screen and (width >=1175px) {
+@media screen and (width >= 1175px) {
   /* Subtle hover effect when you hover over a post content in the timeline. Only on bigger screens. */
   .app-body .status__wrapper:has(.status__content:hover),
   .app-body
@@ -4297,7 +4297,7 @@ div[tabindex='-1']
 .app-body .column-header__button.active .icon {
   transform: none;
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body:not(.layout-multiple-columns) .column-header__wrapper::after,
   .app-body:not(.layout-multiple-columns) .column-back-button::after {
     display: none;
@@ -4331,12 +4331,12 @@ div[tabindex='-1']
 .app-body .column-back-button--slim-button {
   top: -50px;
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body:not(.layout-multiple-columns) .column-back-button--slim-button {
     height: 50px;
   }
 }
-@media screen and (width >=1175px) {
+@media screen and (width >= 1175px) {
   .app-body:not(.layout-multiple-columns) .column-back-button--slim-button {
     display: none;
   }
@@ -4419,7 +4419,7 @@ div[tabindex='-1']
 .app-body .column-header__collapsible::-webkit-scrollbar-track {
   background-color: transparent;
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body:not(.layout-multiple-columns) .column-header__collapsible {
     box-shadow: none;
     border-radius: 0;
@@ -4455,7 +4455,7 @@ div[tabindex='-1']
 .app-body .column-header .column-header__back-button {
   font-weight: bold;
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body:not(.layout-multiple-columns) .ui {
     padding-top: 55px;
   }
@@ -4576,14 +4576,14 @@ div[tabindex='-1']
     border-bottom: 1px solid var(--color-lines);
   }
 }
-@media screen and (width <=885px) {
+@media screen and (width <= 885px) {
   .app-body:not(.layout-multiple-columns)
     .column-header__collapsible:not(.collapsed) {
     border-left-color: var(--color-content-secondary-bg);
     border-right-color: var(--color-content-secondary-bg);
   }
 }
-@media screen and (width >=890px) and (width <=1174px) {
+@media screen and (width >= 890px) and (width <= 1174px) {
   .app-body:not(.layout-multiple-columns) .tabs-bar__wrapper {
     border-color: transparent;
   }
@@ -4593,7 +4593,7 @@ div[tabindex='-1']
   }
 }
 @media (prefers-color-scheme: dark) {
-  @media screen and (width <=1174px) {
+  @media screen and (width <= 1174px) {
     .app-body:not(.layout-multiple-columns) .tabs-bar__wrapper {
       border-color: var(--color-lines);
     }
@@ -4612,7 +4612,7 @@ div[tabindex='-1']
   border-left: 0;
   border-right: 0;
 }
-@media screen and (width >=890px) and (width <=1174px) {
+@media screen and (width >= 890px) and (width <= 1174px) {
   .app-body:not(.layout-multiple-columns)
     .explore__search-header
     + .account__section-headline {
@@ -4769,7 +4769,7 @@ div[tabindex='-1']
 
 /* 📍 Navigation panel
    ------------------- */
-@media screen and (width >=1175px) {
+@media screen and (width >= 1175px) {
   /* Order of the side nav items */
   .app-body .navigation-panel__logo {
     order: 1;
@@ -4884,7 +4884,7 @@ div[tabindex='-1']
   color: transparent;
 }
 
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .layout-single-column .ui__header__links {
     padding-left: 12px;
   }
@@ -4942,7 +4942,7 @@ div[tabindex='-1']
 .app-body .column-link--transparent span {
   position: relative;
 }
-@media screen and (width >=1175px) {
+@media screen and (width >= 1175px) {
   .app-body .column-link:not(.column-link--logo) {
     transition: all 0.3s;
   }
@@ -5009,7 +5009,7 @@ div[tabindex='-1']
   right: -15px;
   bottom: -10px;
 }
-@media screen and (width >=1175px) {
+@media screen and (width >= 1175px) {
   .app-body .column-link[href='/lists'].active + .list-panel,
   .app-body .column-link[href='/lists'] :hover + .list-panel,
   .app-body .list-panel:hover {
@@ -5017,7 +5017,7 @@ div[tabindex='-1']
     animation: fadein 0.5s 1;
   }
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body
     .columns-area__panels__pane--navigational
     .columns-area__panels__pane__inner {
@@ -5703,7 +5703,7 @@ div[tabindex='-1']
 .app-body .getting-started__trends .trends__item {
   padding-left: 19px;
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body .getting-started__trends {
     display: none;
   }
@@ -5803,7 +5803,7 @@ div[tabindex='-1']
   margin-top: -5px;
   width: max-content;
 }
-@media screen and (width <=460px) {
+@media screen and (width <= 460px) {
   .app-body .hashtag-header .hashtag-header__header + div {
     max-width: 55%;
     line-height: 1.5;
@@ -5827,7 +5827,7 @@ div[tabindex='-1']
   margin-right: 5px;
 }
 
-@media screen and (width >=890px) {
+@media screen and (width >= 890px) {
   .app-body .hashtag-header .hashtag-header__header button {
     transform: translate(0, 8px);
   }
@@ -5929,7 +5929,7 @@ div[tabindex='-1']
 .app-body .explore__suggestions__card .icon-button :hover {
   background-color: var(--color-accent-bg);
 }
-@media screen and (width >=1173px) {
+@media screen and (width >= 1173px) {
   .app-body .explore__suggestions__card .icon-button {
     opacity: 0;
     transform: translateX(50%);
@@ -6267,7 +6267,7 @@ div[tabindex='-1']
   color: var(--color-content-fg);
 }
 
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body:not(.layout-multiple-columns) .search {
     margin-bottom: 0;
   }
@@ -6485,7 +6485,7 @@ div[tabindex='-1']
   margin-bottom: 0;
 }
 
-@media screen and (width >=890px) {
+@media screen and (width >= 890px) {
   .app-body
     .notification
     .account:has(
@@ -6504,7 +6504,7 @@ div[tabindex='-1']
     padding-left: 27px;
   }
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body .account {
     padding-left: 18px;
   }
@@ -6576,7 +6576,7 @@ div[tabindex='-1']
   background-image: var(--icon-reject-inv);
 }
 
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body .notification-list {
     bottom: calc(5rem + var(--safe-area-bottom));
   }
@@ -7072,7 +7072,7 @@ div[tabindex='-1']
   background-color: var(--color-reject);
   color: var(--color-accent-fg);
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body #Follow-requests + .column-back-button--slim .column-back-button {
     position: absolute;
     right: 0;
@@ -7686,7 +7686,7 @@ div[tabindex='-1']
   border: 0;
   outline: 1px solid var(--color-lines-translucent);
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body .modal-root__modal:not(.media-modal) {
     margin-top: unset;
   }
@@ -8309,7 +8309,7 @@ div[tabindex='-1']
 .app-body .button .button-tertiary:active {
   transform: scale(0.95);
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body .button.button-tertiary {
     padding: 7px 18px;
   }
@@ -8613,7 +8613,7 @@ div[tabindex='-1']
 .app-body .announcements .emoji-button {
   margin: 0;
 }
-@media screen and (width <=1174px) {
+@media screen and (width <= 1174px) {
   .app-body .announcements {
     box-shadow: none;
     margin-top: -4px;
@@ -8644,7 +8644,7 @@ div[tabindex='-1']
 .app-body .regeneration-indicator {
   background-color: var(--color-content-bg);
 }
-@media screen and (width >=890px) {
+@media screen and (width >= 890px) {
   .app-body .regeneration-indicator {
     padding-top: 50px;
     padding-bottom: 40px;
@@ -8745,7 +8745,7 @@ div[tabindex='-1']
   margin-bottom: 15px;
   font-size: 14px;
 }
-@media screen and (width >=890px) {
+@media screen and (width >= 890px) {
   .app-body .scrollable.about {
     border-radius: 8px 8px 0 0 !important;
   }
@@ -8754,7 +8754,7 @@ div[tabindex='-1']
     border-radius: 6px 6px 0 0;
   }
 }
-@media screen and (width >=890px) and (width <=1174px) {
+@media screen and (width >= 890px) and (width <= 1174px) {
   .app-body .scrollable.about {
     margin-top: 10px;
   }
@@ -8781,7 +8781,7 @@ div[tabindex='-1']
 .app-body .about__meta__divider {
   border-left: 3px solid var(--color-content-secondary-separator);
 }
-@media screen and (width <=600px) {
+@media screen and (width <= 600px) {
   .app-body .about__meta__divider {
     border-top: 3px solid var(--color-content-secondary-separator);
     width: 90%;
@@ -8914,7 +8914,7 @@ div[tabindex='-1']
   background-color: var(--color-content-secondary-bg);
 }
 
-@media screen and (width >=1175px) {
+@media screen and (width >= 1175px) {
   .app-body .about .link-footer,
   .app-body .about .about__footer {
     display: none;
@@ -8940,7 +8940,7 @@ div[tabindex='-1']
   padding-bottom: 20px;
   z-index: 1;
 }
-@media screen and (width >=1175px) {
+@media screen and (width >= 1175px) {
   .app-body:not(:has(#tabs-bar__portal > *))
     .column
     > .scrollable.privacy-policy {
@@ -9223,7 +9223,7 @@ div[tabindex='-1']
   display: none;
 }
 
-@media screen and (width >=630px) and (width <=1174px) {
+@media screen and (width >= 630px) and (width <= 1174px) {
   .layout-multiple-columns .column-header,
   .layout-multiple-columns .column-back-button {
     border-top: 1px solid var(--color-lines);

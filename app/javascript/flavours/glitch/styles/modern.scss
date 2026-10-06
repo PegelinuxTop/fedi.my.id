@@ -27,6 +27,7 @@
 }
 
 body {
+  /* stylelint-disable-next-line property-no-unknown -- font-display is only valid in @font-face */
   font-display: swap !important;
 }
 

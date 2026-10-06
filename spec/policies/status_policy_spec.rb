@@ -239,8 +239,8 @@ RSpec.describe StatusPolicy, type: :model do
   context 'with the permission of react?' do
     permissions :react? do
       it 'grants access when viewer is not blocked' do
-        react = Fabricate(:react)
-        status.account = react.target_account
+        react = Fabricate(:status_reaction)
+        status.account = react.status.account
 
         expect(subject).to permit(react.account, status)
       end

@@ -23,7 +23,9 @@ html {
 }
 
 .theme-dark,
-html:where(:not([data-user-theme='mastodon-light'], [data-user-theme='system'])) {
+html:where(
+  :not([data-user-theme='mastodon-light'], [data-user-theme='system'])
+) {
   color-scheme: dark;
   @include dark.tokens;
 }

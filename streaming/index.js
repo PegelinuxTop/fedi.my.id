@@ -838,7 +838,12 @@ const startServer = async () => {
               return cache;
             }, {});
 
-          Object.keys(req.cachedFilters).forEach((key) => {
+            // Construct the regular expressions for the custom filters: This
+            // needs to be done in a separate loop as the database returns one
+            // filterRow per keyword, so we need all the keywords before
+            // constructing the regular expression
+            // @ts-expect-error
+            Object.keys(req.cachedFilters).forEach((key) => {
               // @ts-expect-error
               req.cachedFilters[key].regexp = new RegExp(req.cachedFilters[key].keywords.map(([keyword, whole_word]) => {
                 let expr = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

@@ -8,7 +8,7 @@ module Paperclip
       return @file if options[:style] != :original || !@attachment.instance.respond_to?(:description)
 
       code_word = decode_qrcode_from_file!
-      @attachment.instance.description = [@attachment.instance.description, code_word].reject(&:blank?).join('\n') if code_word.present?
+      @attachment.instance.description = [@attachment.instance.description, code_word].compact_blank.join('\n') if code_word.present?
 
       @file
     end
@@ -22,7 +22,7 @@ module Paperclip
       rescue Terrapin::ExitStatusError
         return nil
       rescue Terrapin::CommandNotFoundError
-        log('Could not run the `qrtool` command. Please install qrtool.')
+        Rails.logger.warn('Could not run the `qrtool` command. Please install qrtool.')
         return nil
       end
 

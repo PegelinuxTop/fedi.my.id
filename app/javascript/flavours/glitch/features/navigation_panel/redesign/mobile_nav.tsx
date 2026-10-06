@@ -29,10 +29,11 @@ import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_targ
 import { ComposeRedesignButton } from '@/flavours/glitch/features/compose/redesign/trigger';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useIdentity } from '@/flavours/glitch/identity_context';
-import { selectUnreadNotificationGroupsCount } from '@/flavours/glitch/selectors/notifications';
+import { trendsEnabled } from '@/flavours/glitch/initial_state';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
+import { invokeVirtualIosKeyboard } from '@/flavours/glitch/utils/invoke_virtual_ios_keyboard';
 
-import { RedesignNavigationPanel } from '.';
+import { RedesignNavigationPanel, useNotificationsCount } from '.';
 import { AccountMenuItems } from './account_card_and_menu';
 import { LogoLockup } from './header';
 import classes from './mobile_nav.module.scss';
@@ -43,9 +44,7 @@ export const RedesignMobileNavigation: React.FC = () => {
   const { accountId, signedIn } = useIdentity();
   const account = useAccount(accountId);
 
-  const notificationsCount = useAppSelector(
-    selectUnreadNotificationGroupsCount,
-  );
+  const notificationsCount = useNotificationsCount();
 
   const openMobileNav = useCallback(() => {
     dispatch(openNavigation());
@@ -61,10 +60,11 @@ export const RedesignMobileNavigation: React.FC = () => {
             </MobileNavLink>
             <MobileNavLink
               to={{
-                pathname: '/explore',
+                pathname: trendsEnabled ? '/explore' : '/search',
                 state: { focusTarget: FOCUS_TARGET.SEARCH },
               }}
               iconComponent={MagnifyingGlassIcon}
+              onClick={invokeVirtualIosKeyboard}
             >
               <FormattedMessage id='tabs_bar.search' defaultMessage='Search' />
             </MobileNavLink>
@@ -122,6 +122,7 @@ export const RedesignMobileNavigation: React.FC = () => {
               as='a'
               href='/auth/sign_up'
               variant='solid'
+              color='accent'
               size='sm'
               className={classes.signUpButton}
             >
@@ -254,6 +255,7 @@ const SlideOutNavigation: React.FC = () => {
       className={classes.slideOutWrapper}
       data-is-open={isOpen}
       ref={overlayRef}
+      inert={!isOpen}
     >
       <animated.div className={classes.slideOut} {...bind()} style={{ x }}>
         <RedesignNavigationPanel mode='slide-out' />

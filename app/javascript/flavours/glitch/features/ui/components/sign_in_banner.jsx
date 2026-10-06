@@ -66,6 +66,7 @@ const SignInBanner = () => {
     signupButton = (
       <button
         className='button button--block'
+        type='button'
         onClick={openClosedRegistrationsModal}
       >
         <FormattedMessage

@@ -33,7 +33,7 @@ RSpec.describe ReactService, type: :service do
       expect(status.reactions.first).to_not be_nil
     end
 
-    it 'sends a react activity' do
+    it 'sends a react activity', :inline_jobs do
       expect(a_request(:post, 'http://example.com/inbox')).to have_been_made.once
     end
   end

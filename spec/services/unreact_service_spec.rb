@@ -35,7 +35,7 @@ RSpec.describe UnreactService, type: :service do
       expect(status.reactions.first).to be_nil
     end
 
-    it 'sends an undo activity' do
+    it 'sends an undo activity', :inline_jobs do
       expect(a_request(:post, 'http://example.com/inbox')).to have_been_made.once
     end
   end

@@ -116,7 +116,7 @@ const AutosuggestTextarea = forwardRef(({
   const closeMenu = useCallback((e) => {
     setSuggestionsHidden(true);
     onBlur?.(e);
-  }, [setSuggestionsHidden]);
+  }, [setSuggestionsHidden, onBlur]);
 
   const handleFocus = useCallback((e) => {
     onFocus?.(e);
@@ -142,7 +142,6 @@ const AutosuggestTextarea = forwardRef(({
   // Show the suggestions again whenever they change and the textarea is focused
   useEffect(() => {
     if (suggestions.size > 0 && textareaRef.current === document.activeElement) {
-       
       setSuggestionsHidden(false);
     }
   }, [suggestions, textareaRef, setSuggestionsHidden]);

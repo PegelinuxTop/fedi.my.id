@@ -33,8 +33,10 @@ defaults: &defaults
   bootstrap_timeline_accounts: ''
   activity_api_enabled: true
   peers_api_enabled: true
-  show_reblogs_in_public_timelines: false
-  show_replies_in_public_timelines: false
+  show_reblogs_in_local_timelines: false
+  show_replies_in_local_timelines: false
+  show_reblogs_in_federated_timelines: false
+  show_replies_in_federated_timelines: false
   default_content_type: 'text/plain'
   show_domain_blocks: 'disabled'
   show_domain_blocks_rationale: 'disabled'
@@ -45,6 +47,8 @@ defaults: &defaults
   captcha_enabled: false
   allow_referrer_origin: false
   landing_page: 'trends'
+  opt_in_server_directory: false
+  opt_in_server_recommendation: false
   wrapstodon: true
   reject_pattern: ''
   reject_blurhash: ''

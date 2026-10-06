@@ -4,11 +4,11 @@
 
 :root {
   @include base.palette;
-  
+
   @media (prefers-color-scheme: dark) {
     @include dark.tokens;
   }
-  
+
   @media (prefers-color-scheme: light) {
     @include light.tokens;
   }
