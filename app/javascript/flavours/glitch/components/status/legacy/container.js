@@ -2,11 +2,10 @@ import { connect } from 'react-redux';
 
 import { initBlockModal } from '@/flavours/glitch/actions/blocks';
 import {
-  replyCompose,
   mentionCompose,
   directCompose,
 } from '@/flavours/glitch/actions/compose';
-import { quoteComposeById } from '@/flavours/glitch/actions/compose_typed';
+import { quoteComposeById, replyComposeById } from '@/flavours/glitch/actions/compose_typed';
 import {
   initAddFilter,
 } from '@/flavours/glitch/actions/filters';
@@ -71,22 +70,18 @@ const makeMapStateToProps = () => {
   return mapStateToProps;
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch, { contextType }) => ({
 
   onReply (status) {
-    const getStatus = makeGetStatus();
+    dispatch(replyComposeById({ statusId: status.get('id') }));
+  },
 
-    dispatch((_, getState) => {
-      let state = getState();
-      const statusFromState = getStatus(state, ownProps);
-      const rebloggedBy = statusFromState.get('reblog') ? statusFromState.get('account') : undefined;
+  onReactionAdd (statusId, name, url) {
+    dispatch(addReaction(statusId, name, url));
+  },
 
-      if (state.getIn(['local_settings', 'confirm_before_clearing_draft']) && state.getIn(['compose', 'text']).trim().length !== 0) {
-        dispatch(openModal({ modalType: 'CONFIRM_REPLY', modalProps: { status, rebloggedBy } }));
-      } else {
-        dispatch(replyCompose(status, rebloggedBy));
-      }
-    });
+  onReactionRemove (statusId, name) {
+    dispatch(removeReaction(statusId, name));
   },
 
   onQuote (status) {
@@ -115,14 +110,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     } else {
       dispatch(pin(status));
     }
-  },
-
-  onReactionAdd (statusId, name, url) {
-    dispatch(addReaction(statusId, name, url));
-  },
-
-  onReactionRemove (statusId, name) {
-    dispatch(removeReaction(statusId, name));
   },
 
   onEmbed (status) {
@@ -211,7 +198,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 
   onAddFilter (status) {
-    const { contextType } = ownProps;
     dispatch(initAddFilter(status, { contextType }));
   },
 
