@@ -17,18 +17,22 @@ module Account::StatusesSearch
   end
 
   def enqueue_add_to_public_statuses_index
-    return unless Chewy.enabled?
+    return unless Chewy.enabled? || SearchBackend.paradedb?
 
     AddToPublicStatusesIndexWorker.perform_async(id)
   end
 
   def enqueue_remove_from_public_statuses_index
-    return unless Chewy.enabled?
+    return unless Chewy.enabled? || SearchBackend.paradedb?
 
     RemoveFromPublicStatusesIndexWorker.perform_async(id)
   end
 
   def add_to_public_statuses_index!
+    if SearchBackend.paradedb? || SearchBackend.dual_write?
+      StatusSearchDocument.where(account_id: id).update_all(indexable: true)
+    end
+
     return unless Chewy.enabled?
 
     statuses.without_reblogs.public_visibility.reorder(nil).find_in_batches do |batch|
@@ -37,6 +41,10 @@ module Account::StatusesSearch
   end
 
   def remove_from_public_statuses_index!
+    if SearchBackend.paradedb? || SearchBackend.dual_write?
+      StatusSearchDocument.where(account_id: id).update_all(indexable: false)
+    end
+
     return unless Chewy.enabled?
 
     PublicStatusesIndex.filter(term: { account_id: id }).delete_all

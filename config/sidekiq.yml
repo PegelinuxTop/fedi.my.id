@@ -4,6 +4,7 @@
   - [default, 8]
   - [push, 6]
   - [ingress, 4]
+  - [search, 3]
   - [mailers, 2]
   - [pull]
   - [scheduler]
