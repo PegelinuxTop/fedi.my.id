@@ -5,6 +5,22 @@ module Status::SearchConcern
 
   included do
     scope :indexable, -> { without_reblogs.public_visibility.joins(:account).where(account: { indexable: true }) }
+
+    has_one :search_document, class_name: 'StatusSearchDocument', foreign_key: :status_id, inverse_of: :status, dependent: :destroy
+    after_commit :sync_search_documents, on: [:create, :update]
+    after_destroy_commit :remove_search_document
+  end
+
+  def sync_search_documents
+    if SearchBackend.paradedb? || SearchBackend.dual_write?
+      UpsertStatusSearchDocumentWorker.perform_async(id)
+    end
+  end
+
+  def remove_search_document
+    if SearchBackend.paradedb? || SearchBackend.dual_write?
+      StatusSearchDocument.remove_for_status_id!(id)
+    end
   end
 
   def searchable_by
