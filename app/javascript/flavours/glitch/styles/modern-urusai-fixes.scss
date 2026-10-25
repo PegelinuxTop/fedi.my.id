@@ -81,6 +81,31 @@ body.app-body.flavour-glitch > #mastodon .compose-form__submit {
       width: unset !important;
     }
   }
+
+  li:has(
+    a.navigation-panel__compose-button[href='/publish'],
+    a.column-link--transparent[href='/home'],
+    a.column-link--transparent[href='/notifications'],
+    a.column-link--transparent[href='/explore']
+  ) {
+    display: none;
+  }
+
+  li:has(a.column-link--transparent) {
+    flex: 1;
+  }
+
+  a.column-link--transparent {
+    justify-content: center;
+  }
+
+  a.column-link--transparent[href='/about'] {
+    padding: 0 10px !important;
+  }
+
+  button.column-link--transparent {
+    gap: 3px;
+  }
 }
 
 body > [data-popper-placement] {
