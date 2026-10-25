@@ -29,7 +29,7 @@ class SearchService < BaseService
   private
 
   def perform_accounts_search!
-    AccountSearchService.new.call(
+    SearchBackend.current.search_accounts(
       @query,
       @account,
       limit: @limit,
@@ -43,7 +43,7 @@ class SearchService < BaseService
   end
 
   def perform_statuses_search!
-    StatusesSearchService.new.call(
+    SearchBackend.current.search_statuses(
       @query,
       @account,
       limit: @limit,
@@ -55,7 +55,7 @@ class SearchService < BaseService
   end
 
   def perform_hashtags_search!
-    TagSearchService.new.call(
+    SearchBackend.current.search_tags(
       @query,
       limit: @limit,
       offset: @offset,
@@ -84,7 +84,7 @@ class SearchService < BaseService
   end
 
   def status_searchable?
-    Chewy.enabled? && status_search? && @account.present?
+    SearchBackend.current.statuses_searchable?(@account) && status_search?
   end
 
   def account_searchable?
