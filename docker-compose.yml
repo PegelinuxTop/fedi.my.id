@@ -4,7 +4,12 @@
 services:
   db:
     restart: always
+    # Standard PostgreSQL 14 (default):
     image: postgres:14-alpine
+    # For ParadeDB (pg_search BM25 engine), uncomment below and follow upgrade guide:
+    # image: paradedb/paradedb:0.26.2
+    # volumes:
+    #   - ./postgres-paradedb:/var/lib/postgresql/data
     shm_size: 256mb
     networks:
       - internal_network
