@@ -16,7 +16,8 @@ module Mastodon::CLI
 
     option :concurrency, type: :numeric, default: 5, aliases: [:c], desc: 'Workload will be split between this number of threads'
     option :batch_size, type: :numeric, default: 100, aliases: [:b], desc: 'Number of records in each batch'
-    option :only, type: :array, enum: %w(instances accounts tags statuses public_statuses), desc: 'Only process these indices'
+    option :only, type: :array, enum: %w(instances accounts tags statuses public_statuses status_search_documents), desc: 'Only process these indices'
+    option :backend, type: :string, default: 'auto', desc: 'Search backend (elasticsearch or paradedb)'
     option :import, type: :boolean, default: true, desc: 'Import data from the database to the index'
     option :clean, type: :boolean, default: true, desc: 'Remove outdated documents from the index'
     option :reset_chewy, type: :boolean, default: false, desc: "Reset Chewy's internal index"
@@ -33,6 +34,11 @@ module Mastodon::CLI
       database will be imported into the indices, unless overridden with --no-import.
     LONG_DESC
     def deploy
+      if options[:backend] == 'paradedb' || (options[:backend] == 'auto' && SearchBackend.paradedb?)
+        deploy_paradedb!
+        return
+      end
+
       verify_deploy_options!
 
       indices = if options[:only]
@@ -126,6 +132,35 @@ module Mastodon::CLI
     end
 
     private
+
+    def deploy_paradedb!
+      say('Populating status_search_documents for ParadeDB...')
+      scope = Status.unscoped.kept.without_reblogs
+      progress = create_progress_bar(scope.count)
+
+      scope.includes(:account, :tags, :media_attachments, :preloadable_poll)
+           .find_in_batches(batch_size: options[:batch_size]) do |batch|
+        batch.each do |status|
+          StatusSearchDocument.refresh_for_status!(status)
+          progress.increment
+        rescue => e
+          warn("Failed to index status #{status.id}: #{e.message}")
+        end
+      end
+
+      if options[:clean]
+        say('Cleaning up orphaned search documents...')
+        if ENV['PARADEDB_DATABASE_URL'].present?
+          # Cross-database cleanup: fetch valid IDs in batches
+          valid_ids = Status.pluck(:id)
+          StatusSearchDocument.where.not(status_id: valid_ids).delete_all
+        else
+          StatusSearchDocument.where.not(status_id: Status.select(:id)).delete_all
+        end
+      end
+
+      say('ParadeDB status search documents populated successfully!', :green)
+    end
 
     def verify_deploy_options!
       verify_deploy_concurrency!
